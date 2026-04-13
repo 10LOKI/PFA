@@ -17,6 +17,18 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['student', 'partner', 'admin'])->default('student');
+            $table->string('avatar')->nullable();
+            $table->string('city')->nullable();
+            $table->string('phone')->nullable();
+            $table->foreignId('establishment_id')->nullable()->constrained()->nullOnDelete();
+            // Points & grade
+            $table->unsignedInteger('points_balance')->default(0);
+            $table->unsignedInteger('total_hours')->default(0);
+            $table->enum('grade', ['novice', 'pilier', 'ambassadeur'])->default('novice');
+            // Partner-specific
+            $table->boolean('kyc_verified')->default(false);
+            $table->boolean('is_certified_partner')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });
