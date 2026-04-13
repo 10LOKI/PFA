@@ -44,6 +44,24 @@
 - `users.points_balance` is mutable — must only be written by `PointsService` inside `DB::transaction()`.
   Never call `$user->update(['points_balance' => X])` directly anywhere in the codebase.
 
+## Milestone 3: Authentication & Routing Layer
+- **Date:** April 2026
+
+### Breeze (Blade stack)
+- [x] `laravel/breeze` v2.4.1 installed — Blade + Tailwind stack
+- [x] `RegisteredUserController` — role field added to validation + User::create (student|partner only, admin never self-registered)
+- [x] `register.blade.php` — role selector added (Student / Partner Organisation)
+- [x] All 24 auth routes confirmed: login, register, logout, password reset, email verification, profile CRUD
+
+### Schema Fix: Circular FK resolved
+- [x] Removed inline FK `establishment_id` from `users` migration (caused errno 150 — establishments table didn't exist yet)
+- [x] Created `2026_04_13_160006_add_establishment_foreign_to_users_table.php` — FK added after establishments table exists
+- [x] `migrate:fresh` — all 14 tables created successfully
+
+### Known Risk (still open)
+- `users.points_balance` is mutable — must only be written by `PointsService` inside `DB::transaction()`.
+  Never call `$user->update(['points_balance' => X])` directly anywhere in the codebase.
+
 ## Current Focus
-- Breeze installation (API mode for React frontend)
 - Spatie Laravel-Permission setup for 3 roles: student, partner, admin
+- Role-based middleware and dashboard redirects post-login
