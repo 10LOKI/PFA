@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('points_transactions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->enum('type', ['earned', 'spent', 'burned', 'adjusted']);
+            $table->integer('amount');                        // positive = credit, negative = debit
+            $table->unsignedInteger('balance_after');         // snapshot for transparent wallet
+            $table->string('source_type')->nullable();        // morphable: event, reward_redemption, admin
+            $table->unsignedBigInteger('source_id')->nullable();
+            $table->string('description')->nullable();        // human-readable log entry
             $table->timestamps();
+
+            $table->index(['source_type', 'source_id']);
         });
     }
 
