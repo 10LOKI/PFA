@@ -14,9 +14,9 @@ class KycController extends Controller
         $this->authorize('approve', Partner::class);
 
         $pending = Partner::where('kyc_status', 'pending')
-                          ->with('user')
-                          ->latest()
-                          ->paginate(20);
+            ->with('user')
+            ->latest()
+            ->paginate(20);
 
         return view('admin.kyc.index', compact('pending'));
     }

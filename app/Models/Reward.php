@@ -20,7 +20,7 @@ class Reward extends Model
     {
         return [
             'is_premium' => 'boolean',
-            'is_active'  => 'boolean',
+            'is_active' => 'boolean',
             'expires_at' => 'datetime',
         ];
     }
@@ -35,9 +35,17 @@ class Reward extends Model
     public function isAccessibleBy(User $user): bool
     {
         $hierarchy = ['novice' => 0, 'pilier' => 1, 'ambassadeur' => 2];
+
         return ($hierarchy[$user->grade] ?? 0) >= ($hierarchy[$this->min_grade] ?? 0);
     }
 
-    public function partner(): BelongsTo  { return $this->belongsTo(User::class, 'partner_id'); }
-    public function redemptions(): HasMany { return $this->hasMany(RewardRedemption::class); }
+    public function partner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'partner_id');
+    }
+
+    public function redemptions(): HasMany
+    {
+        return $this->hasMany(RewardRedemption::class);
+    }
 }

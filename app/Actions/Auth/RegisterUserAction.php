@@ -24,10 +24,10 @@ class RegisterUserAction
     {
         return DB::transaction(function () use ($data) {
             $user = User::create([
-                'name'     => $data['name'],
-                'email'    => $data['email'],
+                'name' => $data['name'],
+                'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'role'     => $data['role'],
+                'role' => $data['role'],
             ]);
 
             $user->givePermissionTo(self::PERMISSIONS[$data['role']]);

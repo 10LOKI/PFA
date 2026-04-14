@@ -33,11 +33,11 @@ class RedeemRewardAction
 
             // Burn points (negative amount = debit)
             $this->creditPoints->execute(
-                user:        $user,
-                amount:      -$reward->points_cost,
-                type:        'burned',
+                user: $user,
+                amount: -$reward->points_cost,
+                type: 'burned',
                 description: "Redemption: {$reward->title}",
-                source:      $reward,
+                source: $reward,
             );
 
             // Decrement stock if limited
@@ -47,11 +47,11 @@ class RedeemRewardAction
 
             // Create redemption record
             return RewardRedemption::create([
-                'user_id'      => $user->id,
-                'reward_id'    => $reward->id,
+                'user_id' => $user->id,
+                'reward_id' => $reward->id,
                 'points_spent' => $reward->points_cost,
-                'status'       => 'pending',
-                'redeemed_at'  => now(),
+                'status' => 'pending',
+                'redeemed_at' => now(),
             ]);
         });
     }

@@ -16,8 +16,8 @@ class EventRegistrationController extends Controller
         abort_if($event->isFull(), 422, 'Event is full.');
 
         $alreadyRegistered = $event->participants()
-                                   ->wherePivot('user_id', $user->id)
-                                   ->exists();
+            ->wherePivot('user_id', $user->id)
+            ->exists();
 
         abort_if($alreadyRegistered, 422, 'Already registered.');
 
