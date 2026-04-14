@@ -158,11 +158,32 @@
 - [x] 42 total routes registered and verified
 
 ### Known Risks (still open)
-- `users.points_balance` mutable — mitigated by CreditPointsAction, no DB-level constraint yet
-- No Blade views for events/rewards yet — controllers return views that don't exist
-- No QR code generation logic yet (qr_code_token is nullable, never populated)
+- No Blade views for rewards marketplace yet (routes defined but views missing)
 
 ## Current Focus
-- Blade views for events (index, show, create, edit)
-- QR code generation for events (GenerateQrAction)
-- Grade upgrade logic (UpgradeGradeAction)
+- Reward marketplace Blade views
+
+## Milestone 7: Points Balance Sync Trigger
+- [x] 2 triggers MySQL créés (insert + delete) sur points_transactions
+- [x] Synchronisation automatique users.points_balance depuis le ledger
+- [x] Risque "mutable points_balance sans contrainte DB" — CLOSED
+
+## Milestone 8: QR Code Generation
+- [x] Route GET events/{event}/qr ajoutée
+- [x] EventController@qr() générate SVG si token absent
+- [x] EventPolicy@generateQr() ajouté (partner + permission)
+- [x] GenerateQrAction utilisé pour génération
+
+## Milestone 9: Blade Views for Events
+- [x] Controller base ajouté (AuthorizesRequests trait)
+- [x] events/index.blade.php — liste paginée avec cards
+- [x] events/show.blade.php — détail + QR check-in partner + register student
+- [x] events/create.blade.php — formulaire création (partner)
+- [x] events/edit.blade.php — formulaire édition (partner owner)
+- [x] Risque "No Blade views for events" — CLOSED
+
+## Milestone 10: Grade Upgrade Logic
+- [x] UpgradeGradeAction créé (hierarchy: novice → pilier → ambassadeur)
+- [x] Thresholds: novice=0, pilier=50h, ambassadeur=150h
+- [x] Intégré dans CheckInStudentAction après increment total_hours
+- [x] Méthodes utilitaires: getThreshold(), getNextThreshold()

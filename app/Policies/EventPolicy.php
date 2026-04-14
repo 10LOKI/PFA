@@ -38,4 +38,9 @@ class EventPolicy
     {
         return $user->can('event.approve') && $user->isAdmin();
     }
+
+    public function generateQr(User $user, Event $event): bool
+    {
+        return $user->can('event.generate-qr') && $user->id === $event->partner_id;
+    }
 }
