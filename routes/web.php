@@ -2,24 +2,20 @@
 
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/', fn () => view('welcome'));
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard/student', fn () => view('dashboard.student'))->name('dashboard.student');
-    Route::get('/dashboard/partner', fn () => view('dashboard.partner'))->name('dashboard.partner');
-    Route::get('/dashboard/admin', fn () => view('dashboard.admin'))->name('dashboard.admin');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/student', [DashboardController::class, 'student'])->name('dashboard.student');
+    Route::get('/dashboard/partner', [DashboardController::class, 'partner'])->name('dashboard.partner');
+    Route::get('/dashboard/admin', [DashboardController::class, 'admin'])->name('dashboard.admin');
 });
 
 Route::middleware('auth')->group(function () {

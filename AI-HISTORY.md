@@ -209,6 +209,18 @@
 ## Milestone 14: Navigation UI
 - [x] navigation.blade.php redesigné avec palette ActTogether
 - [x] Menu dynamique par rôle (student/partner/admin)
-- [x] Blade::role() directives ajoutées dans AppServiceProvider
 - [x] Points balance affiché pour étudiants
 - [x] Grade affiché dans dropdown utilisateur
+
+## Milestone 15: Dashboards UI
+- [x] student.blade.php - stats cards, grade progress bar, quick actions
+- [x] partner.blade.php - KYC warning, stats, quick actions
+- [x] admin.blade.php - stats cards (students/partners/pending/KYC), quick actions
+- [x] Palette: #FFDCDC, #FFE8CD, #FFD6BA, #D4A574, #FFF2EB
+
+## Milestone 16: Role-Based Dashboard Routes
+- [x] DashboardController créé avec méthodes: index, student, partner, admin
+- [x] Routes: /dashboard → redirect basé sur role
+- [x] /dashboard/student, /dashboard/partner, /dashboard/admin directs
+- [x] Login redirect vers dashboard rôle-specific
+- [x] Old dashboard.blade.php supprimé
