@@ -17,9 +17,9 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard/student', fn() => view('dashboard.student'))->name('dashboard.student');
-    Route::get('/dashboard/partner', fn() => view('dashboard.partner'))->name('dashboard.partner');
-    Route::get('/dashboard/admin',   fn() => view('dashboard.admin'))->name('dashboard.admin');
+    Route::get('/dashboard/student', fn () => view('dashboard.student'))->name('dashboard.student');
+    Route::get('/dashboard/partner', fn () => view('dashboard.partner'))->name('dashboard.partner');
+    Route::get('/dashboard/admin', fn () => view('dashboard.admin'))->name('dashboard.admin');
 });
 
 Route::middleware('auth')->group(function () {
@@ -36,6 +36,7 @@ Route::middleware('auth')->group(function () {
 
     // QR Check-in (partner)
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
+    Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
 
     // Rewards marketplace
     Route::get('rewards', [RewardController::class, 'index'])->name('rewards.index');

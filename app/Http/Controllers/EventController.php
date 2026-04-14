@@ -12,11 +12,12 @@ use Illuminate\View\View;
 class EventController extends Controller
 {
     public function __construct(private GenerateQrAction $generateQr) {}
+
     public function index(): View
     {
         $events = Event::where('status', 'approved')
-                       ->latest('starts_at')
-                       ->paginate(12);
+            ->latest('starts_at')
+            ->paginate(12);
 
         return view('events.index', compact('events'));
     }
@@ -41,22 +42,22 @@ class EventController extends Controller
         $this->authorize('create', Event::class);
 
         $data = $request->validate([
-            'title'              => ['required', 'string', 'max:255'],
-            'description'        => ['required', 'string'],
-            'category'           => ['nullable', 'string', 'max:100'],
-            'city'               => ['required', 'string', 'max:100'],
-            'address'            => ['required', 'string', 'max:255'],
-            'starts_at'          => ['required', 'date', 'after:now'],
-            'ends_at'            => ['required', 'date', 'after:starts_at'],
-            'volunteer_quota'    => ['required', 'integer', 'min:1'],
-            'duration_hours'     => ['required', 'integer', 'min:1'],
-            'points_reward'      => ['required', 'integer', 'min:1'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'category' => ['nullable', 'string', 'max:100'],
+            'city' => ['required', 'string', 'max:100'],
+            'address' => ['required', 'string', 'max:255'],
+            'starts_at' => ['required', 'date', 'after:now'],
+            'ends_at' => ['required', 'date', 'after:starts_at'],
+            'volunteer_quota' => ['required', 'integer', 'min:1'],
+            'duration_hours' => ['required', 'integer', 'min:1'],
+            'points_reward' => ['required', 'integer', 'min:1'],
             'urgency_multiplier' => ['sometimes', 'numeric', 'min:1', 'max:3'],
-            'image'              => ['nullable', 'image', 'max:2048'],
+            'image' => ['nullable', 'image', 'max:2048'],
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status']     = auth()->user()->is_certified_partner ? 'approved' : 'pending';
+        $data['status'] = auth()->user()->is_certified_partner ? 'approved' : 'pending';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -65,7 +66,7 @@ class EventController extends Controller
         $event = Event::create($data);
 
         return redirect()->route('events.show', $event)
-                         ->with('success', 'Event created successfully.');
+            ->with('success', 'Event created successfully.');
     }
 
     public function edit(Event $event): View
@@ -80,23 +81,23 @@ class EventController extends Controller
         $this->authorize('update', $event);
 
         $data = $request->validate([
-            'title'              => ['required', 'string', 'max:255'],
-            'description'        => ['required', 'string'],
-            'category'           => ['nullable', 'string', 'max:100'],
-            'city'               => ['required', 'string', 'max:100'],
-            'address'            => ['required', 'string', 'max:255'],
-            'starts_at'          => ['required', 'date'],
-            'ends_at'            => ['required', 'date', 'after:starts_at'],
-            'volunteer_quota'    => ['required', 'integer', 'min:1'],
-            'duration_hours'     => ['required', 'integer', 'min:1'],
-            'points_reward'      => ['required', 'integer', 'min:1'],
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'category' => ['nullable', 'string', 'max:100'],
+            'city' => ['required', 'string', 'max:100'],
+            'address' => ['required', 'string', 'max:255'],
+            'starts_at' => ['required', 'date'],
+            'ends_at' => ['required', 'date', 'after:starts_at'],
+            'volunteer_quota' => ['required', 'integer', 'min:1'],
+            'duration_hours' => ['required', 'integer', 'min:1'],
+            'points_reward' => ['required', 'integer', 'min:1'],
             'urgency_multiplier' => ['sometimes', 'numeric', 'min:1', 'max:3'],
         ]);
 
         $event->update($data);
 
         return redirect()->route('events.show', $event)
-                         ->with('success', 'Event updated.');
+            ->with('success', 'Event updated.');
     }
 
     public function destroy(Event $event): RedirectResponse
@@ -106,6 +107,19 @@ class EventController extends Controller
         $event->update(['status' => 'cancelled']);
 
         return redirect()->route('events.index')
-                         ->with('success', 'Event cancelled.');
+            ->with('success', 'Event cancelled.');
+    }
+
+    public function qr(Event $event): Response
+    {
+        $this->authorize('generate-qr', $event);
+
+        if (! $event->qr_code_token) {
+            $event = $this->generateQr->execute($event);
+        }
+
+        $svg = $this->generateQr->execute($event);
+
+        return response($svg, 200, ['Content-Type' => 'image/svg+xml']);
     }
 }
