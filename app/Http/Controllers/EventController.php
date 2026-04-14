@@ -15,9 +15,7 @@ class EventController extends Controller
 
     public function index(): View
     {
-        $events = Event::where('status', 'approved')
-            ->latest('starts_at')
-            ->paginate(12);
+        $events = Event::latest('starts_at')->paginate(12);
 
         return view('events.index', compact('events'));
     }
@@ -25,7 +23,6 @@ class EventController extends Controller
     public function show(Event $event): View
     {
         $this->authorize('view', $event);
-        $event->load(['partner', 'comments.user', 'feedbacks']);
 
         return view('events.show', compact('event'));
     }
@@ -57,7 +54,7 @@ class EventController extends Controller
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status'] = auth()->user()->is_certified_partner ? 'approved' : 'pending';
+        $data['status'] = 'approved'; // Auto-approve for now
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');

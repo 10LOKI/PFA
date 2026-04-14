@@ -224,3 +224,21 @@
 - [x] /dashboard/student, /dashboard/partner, /dashboard/admin directs
 - [x] Login redirect vers dashboard rôle-specific
 - [x] Old dashboard.blade.php supprimé
+
+## Milestone 17: Events Display
+- [x] EventPolicy simplifié: viewAny=true, view=true, create=isPartner
+- [x] EventController@index: affiche tous les événements (pas seulement approved)
+- [x] EventController@show: retiré load() relations (comments, feedbacks)
+- [x] Tables créées: comments, feedback
+
+## Milestone 18: User Model Fixes
+- [x] hasRole() ajouté dans User.php pour compatibilité Spatie
+
+## Milestone 19: Private Messages System
+- [x] Tables: conversations, messages, conversation_user (created)
+- [x] Models: Conversation (participants, messages), Message (sender, read_at)
+- [x] User relationships: conversations(), sentMessages()
+- [x] MessageController: index, show, store, start
+- [x] Routes: /messages, /messages/{conversation}, /messages/start
+- [x] Views: messages/index, messages/show (styled with palette #D4A574)
+- [x] Navigation: link to messages added

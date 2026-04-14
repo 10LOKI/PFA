@@ -9,17 +9,17 @@ class EventPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->can('event.browse');
+        return true;
     }
 
     public function view(User $user, Event $event): bool
     {
-        return $event->isApproved() || $user->id === $event->partner_id || $user->isAdmin();
+        return true;
     }
 
     public function create(User $user): bool
     {
-        return $user->can('event.create') && $user->isPartner();
+        return $user->isPartner();
     }
 
     public function update(User $user, Event $event): bool

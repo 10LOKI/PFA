@@ -51,28 +51,29 @@
                 <div class="relative pt-1">
                     @php
                         $thresholds = ['novice' => 0, 'pilier' => 50, 'ambassadeur' => 150];
-                        $currentGrade = auth()->user()->grade;
                         $currentHours = auth()->user()->total_hours;
                         $nextGrade = null;
                         $nextThreshold = null;
+                        $progress = 0;
                         
                         foreach ($thresholds as $grade => $threshold) {
                             if ($threshold > $currentHours) {
                                 $nextGrade = $grade;
                                 $nextThreshold = $threshold;
+                                $progress = min(100, ($currentHours / $threshold) * 100);
                                 break;
                             }
                         }
                     @endphp
                     
                     @if($nextGrade)
-                        <div class="h-4 bg-[#FFE8CD] rounded-full overflow-hidden">
-                            <div class="h-full bg-[#D4A574] rounded-full transition-all" style="width: {{ ($currentHours / $nextThreshold) * 100 }}%"></div>
+                        <div class="h-4 bg-orange-200 rounded-full overflow-hidden">
+                            <div class="h-full bg-orange-400 rounded-full transition-all" style="width: {{ $progress }}%"></div>
                         </div>
                         <p class="text-sm text-gray-600 mt-2">{{ $currentHours }}h / {{ $nextThreshold }}h pour devenir {{ $nextGrade }}</p>
                     @else
-                        <div class="h-4 bg-[#D4A574] rounded-full"></div>
-                        <p class="text-sm text-[#D4A574] font-semibold mt-2">🎉 Grade maximum atteint !</p>
+                        <div class="h-4 bg-orange-400 rounded-full"></div>
+                        <p class="text-sm text-orange-600 font-semibold mt-2">🎉 Grade maximum atteint !</p>
                     @endif
                 </div>
             </div>
