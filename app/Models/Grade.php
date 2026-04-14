@@ -10,22 +10,8 @@ class Grade extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-        'establishment_id',
-        'level',
-        'field',
-        'academic_year',
-    ];
+    protected $fillable = ['user_id', 'establishment_id', 'level', 'field', 'academic_year'];
 
-    // --- Relationships ---
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function establishment(): BelongsTo
-    {
-        return $this->belongsTo(Establishment::class);
-    }
+    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function establishment(): BelongsTo { return $this->belongsTo(Establishment::class); }
 }

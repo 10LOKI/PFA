@@ -11,39 +11,20 @@ class Partner extends Model
 {
     use HasFactory;
 
-    protected $table = 'parteners'; // keeps consistency with migration typo
+    protected $table = 'parteners';
 
     protected $fillable = [
-        'user_id',
-        'company_name',
-        'logo',
-        'bio',
-        'website',
-        'sector',
-        'rc_number',
-        'rc_document',
-        'kyc_status',
-        'is_certified',
+        'user_id', 'company_name', 'logo', 'bio', 'website',
+        'sector', 'rc_number', 'rc_document', 'kyc_status', 'is_certified',
     ];
 
     protected function casts(): array
     {
-        return [
-            'is_certified' => 'boolean',
-        ];
+        return ['is_certified' => 'boolean'];
     }
 
-    // --- Helpers ---
     public function isApproved(): bool { return $this->kyc_status === 'approved'; }
 
-    // --- Relationships ---
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function events(): HasMany
-    {
-        return $this->hasMany(Event::class, 'partner_id', 'user_id');
-    }
+    public function user(): BelongsTo { return $this->belongsTo(User::class); }
+    public function events(): HasMany { return $this->hasMany(Event::class, 'partner_id', 'user_id'); }
 }

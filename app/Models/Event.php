@@ -13,23 +13,10 @@ class Event extends Model
     use HasFactory;
 
     protected $fillable = [
-        'partner_id',
-        'title',
-        'description',
-        'category',
-        'city',
-        'address',
-        'latitude',
-        'longitude',
-        'starts_at',
-        'ends_at',
-        'volunteer_quota',
-        'duration_hours',
-        'points_reward',
-        'urgency_multiplier',
-        'qr_code_token',
-        'status',
-        'image',
+        'partner_id', 'title', 'description', 'category', 'city', 'address',
+        'latitude', 'longitude', 'starts_at', 'ends_at', 'volunteer_quota',
+        'duration_hours', 'points_reward', 'urgency_multiplier', 'qr_code_token',
+        'status', 'image',
     ];
 
     protected function casts(): array
@@ -43,21 +30,15 @@ class Event extends Model
         ];
     }
 
-    // --- Helpers ---
-    public function isApproved(): bool  { return $this->status === 'approved'; }
-    public function isFull(): bool      { return $this->participants()->count() >= $this->volunteer_quota; }
+    public function isApproved(): bool { return $this->status === 'approved'; }
+    public function isFull(): bool     { return $this->participants()->count() >= $this->volunteer_quota; }
 
-    /** Effective points after urgency boost */
     public function effectivePoints(): int
     {
         return (int) round($this->points_reward * $this->urgency_multiplier);
     }
 
-    // --- Relationships ---
-    public function partner(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'partner_id');
-    }
+    public function partner(): BelongsTo { return $this->belongsTo(User::class, 'partner_id'); }
 
     public function participants(): BelongsToMany
     {
@@ -67,13 +48,6 @@ class Event extends Model
                     ->withTimestamps();
     }
 
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    public function feedbacks(): MorphMany
-    {
-        return $this->morphMany(Feedback::class, 'feedbackable');
-    }
+    public function comments(): MorphMany { return $this->morphMany(Comment::class, 'commentable'); }
+    public function feedbacks(): MorphMany { return $this->morphMany(Feedback::class, 'feedbackable'); }
 }
