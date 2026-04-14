@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class EventUser extends Pivot
 {
     protected $table = 'event_user';
+
     public $incrementing = true;
 
     protected $fillable = [
@@ -25,6 +26,13 @@ class EventUser extends Pivot
         return $this->checked_in_at !== null && $this->status === 'checked_in';
     }
 
-    public function event(): BelongsTo { return $this->belongsTo(Event::class); }
-    public function user(): BelongsTo  { return $this->belongsTo(User::class); }
+    public function event(): BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

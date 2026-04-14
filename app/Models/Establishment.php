@@ -12,6 +12,13 @@ class Establishment extends Model
 
     protected $fillable = ['name', 'type', 'address', 'city', 'phone', 'email'];
 
-    public function users(): HasMany { return $this->hasMany(User::class); }
-    public function grades(): HasMany { return $this->hasMany(Grade::class); }
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    public function grades(): HasMany
+    {
+        return $this->hasMany(Grade::class);
+    }
 }

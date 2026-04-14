@@ -21,13 +21,13 @@ class CreditPointsAction
             $user->refresh();
 
             return PointsTransaction::create([
-                'user_id'       => $user->id,
-                'type'          => $type,
-                'amount'        => $amount,
+                'user_id' => $user->id,
+                'type' => $type,
+                'amount' => $amount,
                 'balance_after' => $user->points_balance,
-                'source_type'   => $source ? get_class($source) : null,
-                'source_id'     => $source?->id,
-                'description'   => $description,
+                'source_type' => $source ? get_class($source) : null,
+                'source_id' => $source?->id,
+                'description' => $description,
             ]);
         });
     }

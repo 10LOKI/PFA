@@ -23,8 +23,18 @@ class Partner extends Model
         return ['is_certified' => 'boolean'];
     }
 
-    public function isApproved(): bool { return $this->kyc_status === 'approved'; }
+    public function isApproved(): bool
+    {
+        return $this->kyc_status === 'approved';
+    }
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function events(): HasMany { return $this->hasMany(Event::class, 'partner_id', 'user_id'); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function events(): HasMany
+    {
+        return $this->hasMany(Event::class, 'partner_id', 'user_id');
+    }
 }

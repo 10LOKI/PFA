@@ -18,8 +18,18 @@ class Feedback extends Model
         return ['rating' => 'integer'];
     }
 
-    public function isValidRating(): bool { return $this->rating >= 1 && $this->rating <= 5; }
+    public function isValidRating(): bool
+    {
+        return $this->rating >= 1 && $this->rating <= 5;
+    }
 
-    public function user(): BelongsTo      { return $this->belongsTo(User::class); }
-    public function feedbackable(): MorphTo { return $this->morphTo(); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function feedbackable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

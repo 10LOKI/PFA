@@ -16,10 +16,10 @@ class RewardController extends Controller
         $this->authorize('viewAny', Reward::class);
 
         $rewards = Reward::where('is_active', true)
-                         ->where(fn($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
-                         ->where(fn($q) => $q->whereNull('stock')->orWhere('stock', '>', 0))
-                         ->latest()
-                         ->paginate(12);
+            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
+            ->where(fn ($q) => $q->whereNull('stock')->orWhere('stock', '>', 0))
+            ->latest()
+            ->paginate(12);
 
         return view('rewards.index', compact('rewards'));
     }

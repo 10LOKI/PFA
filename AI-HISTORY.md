@@ -197,4 +197,18 @@
 - [x] Tests: 24 passed, 1 skipped (registration redirect)
 
 ## Current Focus
-- Investigation: registration test skip (user not authenticated after POST)
+- UI: Landing Page + Navigation
+
+## Milestone 13: Landing Page UI
+- [x] welcome.blade.php redesign avec palette: #FFDCDC, #FFF2EB, #FFE8CD, #FFD6BA, #D4A574
+- [x] Hero section: tagline + CTA buttons
+- [x] Features: Check-in QR, Points Garantis, Marketplace
+- [x] Stats section fake
+- [x] Footer avec liens
+
+## Milestone 14: Navigation UI
+- [x] navigation.blade.php redesigné avec palette ActTogether
+- [x] Menu dynamique par rôle (student/partner/admin)
+- [x] Blade::role() directives ajoutées dans AppServiceProvider
+- [x] Points balance affiché pour étudiants
+- [x] Grade affiché dans dropdown utilisateur

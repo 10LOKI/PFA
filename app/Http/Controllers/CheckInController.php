@@ -17,7 +17,7 @@ class CheckInController extends Controller
         abort_if(! auth()->user()->can('checkin.validate'), 403);
 
         $request->validate([
-            'qr_token'  => ['required', 'string'],
+            'qr_token' => ['required', 'string'],
             'student_id' => ['required', 'exists:users,id'],
         ]);
 

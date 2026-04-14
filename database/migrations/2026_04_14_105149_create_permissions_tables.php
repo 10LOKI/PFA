@@ -24,9 +24,9 @@ return new class extends Migration
             $table->index(['model_id', 'model_type'], 'model_has_permissions_model_id_model_type_index');
 
             $table->foreign('permission_id')
-                  ->references('id')
-                  ->on('permissions')
-                  ->onDelete('cascade');
+                ->references('id')
+                ->on('permissions')
+                ->onDelete('cascade');
         });
     }
 

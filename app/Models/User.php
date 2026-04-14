@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -12,7 +13,7 @@ use Spatie\Permission\Traits\HasPermissions;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasPermissions;
+    use HasFactory, HasPermissions, Notifiable;
 
     protected $fillable = [
         'name',
@@ -38,17 +39,28 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'    => 'datetime',
-            'password'             => 'hashed',
-            'kyc_verified'         => 'boolean',
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'kyc_verified' => 'boolean',
             'is_certified_partner' => 'boolean',
         ];
     }
 
     // --- Role helpers ---
-    public function isAdmin(): bool   { return $this->role === 'admin'; }
-    public function isPartner(): bool { return $this->role === 'partner'; }
-    public function isStudent(): bool { return $this->role === 'student'; }
+    public function isAdmin(): bool
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isPartner(): bool
+    {
+        return $this->role === 'partner';
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === 'student';
+    }
 
     // --- Relationships ---
     public function establishment(): BelongsTo
@@ -76,12 +88,12 @@ class User extends Authenticatable
         return $this->hasMany(RewardRedemption::class);
     }
 
-    public function events(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class)
-                    ->using(EventUser::class)
-                    ->withPivot(['status', 'checked_in_at', 'points_earned', 'partner_rating', 'partner_feedback'])
-                    ->withTimestamps();
+            ->using(EventUser::class)
+            ->withPivot(['status', 'checked_in_at', 'points_earned', 'partner_rating', 'partner_feedback'])
+            ->withTimestamps();
     }
 
     public function hostedEvents(): HasMany

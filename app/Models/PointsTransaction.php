@@ -26,10 +26,17 @@ class PointsTransaction extends Model
     public static function boot(): void
     {
         parent::boot();
-        static::updating(fn() => throw new \LogicException('PointsTransaction is immutable.'));
-        static::deleting(fn() => throw new \LogicException('PointsTransaction is immutable.'));
+        static::updating(fn () => throw new \LogicException('PointsTransaction is immutable.'));
+        static::deleting(fn () => throw new \LogicException('PointsTransaction is immutable.'));
     }
 
-    public function user(): BelongsTo { return $this->belongsTo(User::class); }
-    public function source(): MorphTo { return $this->morphTo(); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function source(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

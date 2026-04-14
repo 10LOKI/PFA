@@ -13,6 +13,13 @@ class Comment extends Model
 
     protected $fillable = ['user_id', 'commentable_id', 'commentable_type', 'body'];
 
-    public function user(): BelongsTo    { return $this->belongsTo(User::class); }
-    public function commentable(): MorphTo { return $this->morphTo(); }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function commentable(): MorphTo
+    {
+        return $this->morphTo();
+    }
 }

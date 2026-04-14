@@ -18,11 +18,33 @@ class RewardRedemption extends Model
         return ['redeemed_at' => 'datetime', 'points_spent' => 'integer'];
     }
 
-    public function isPending(): bool  { return $this->status === 'pending'; }
-    public function isApproved(): bool { return $this->status === 'approved'; }
-    public function isRejected(): bool { return $this->status === 'rejected'; }
+    public function isPending(): bool
+    {
+        return $this->status === 'pending';
+    }
 
-    public function user(): BelongsTo    { return $this->belongsTo(User::class); }
-    public function reward(): BelongsTo  { return $this->belongsTo(Reward::class); }
-    public function pointsTransactions(): MorphMany { return $this->morphMany(PointsTransaction::class, 'source'); }
+    public function isApproved(): bool
+    {
+        return $this->status === 'approved';
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === 'rejected';
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function reward(): BelongsTo
+    {
+        return $this->belongsTo(Reward::class);
+    }
+
+    public function pointsTransactions(): MorphMany
+    {
+        return $this->morphMany(PointsTransaction::class, 'source');
+    }
 }
