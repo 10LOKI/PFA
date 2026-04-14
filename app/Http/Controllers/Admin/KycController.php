@@ -11,7 +11,7 @@ class KycController extends Controller
 {
     public function index(): View
     {
-        abort_if(! auth()->user()->can('partner.kyc-approve'), 403);
+        $this->authorize('approve', Partner::class);
 
         $pending = Partner::where('kyc_status', 'pending')
                           ->with('user')
@@ -23,7 +23,7 @@ class KycController extends Controller
 
     public function approve(Partner $partner): RedirectResponse
     {
-        abort_if(! auth()->user()->can('partner.kyc-approve'), 403);
+        $this->authorize('approve', $partner);
 
         $partner->update(['kyc_status' => 'approved']);
         $partner->user->update(['kyc_verified' => true]);
@@ -34,7 +34,7 @@ class KycController extends Controller
 
     public function reject(Partner $partner): RedirectResponse
     {
-        abort_if(! auth()->user()->can('partner.kyc-reject'), 403);
+        $this->authorize('reject', $partner);
 
         $partner->update(['kyc_status' => 'rejected']);
 

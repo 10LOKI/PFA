@@ -101,3 +101,40 @@
 - `RedeemRewardAction` — burn points on marketplace redemption
 - Laravel Policies for Event, Partner, Admin authorization
 - Role-based dashboard redirect post-login
+
+## Milestone 5: RedeemRewardAction & Models Restoration
+- **Date:** April 2026
+
+### Models Restored (10 models wiped by Breeze, recreated)
+- [x] `Event` — effectivePoints(), isFull(), morphMany comments/feedbacks
+- [x] `EventUser` (Pivot) — hasCheckedIn() QR guard, $incrementing=true
+- [x] `Partner` — $table='parteners', isApproved()
+- [x] `Grade` — belongsTo user + establishment
+- [x] `Establishment` — hasMany users, grades
+- [x] `Reward` — isAvailable(), isAccessibleBy(User) grade gate
+- [x] `RewardRedemption` — status helpers, morphMany pointsTransactions
+- [x] `PointsTransaction` — UPDATED_AT=null, boot() immutability guard
+- [x] `Comment` — polymorphic commentable
+- [x] `Feedback` — polymorphic feedbackable, isValidRating()
+
+### Action Classes
+- [x] `App\Actions\Reward\RedeemRewardAction` — 4 sequential guards:
+  1. `isAvailable()` — stock + expiration + active check
+  2. `isAccessibleBy()` — grade gate (novice/pilier/ambassadeur)
+  3. `points_balance >= points_cost` — balance check
+  4. `CreditPointsAction(amount: -points_cost, type: 'burned')` — points burned atomically
+  5. `stock decrement` if limited
+  6. `RewardRedemption::create()` — redemption record created
+
+### RewardController
+- [x] `GET rewards` — marketplace browse with DB-level availability filter
+- [x] `POST rewards/{reward}/redeem` — delegates to RedeemRewardAction
+- [x] 39 routes registered and verified
+
+### Known Risks (still open)
+- `authorize()` in EventController requires EventPolicy — not yet defined
+- `users.points_balance` mutable — mitigated by CreditPointsAction, no DB-level constraint
+
+## Current Focus
+- Laravel Policies (Event, Partner, Admin)
+- Role-based dashboard redirect post-login

@@ -20,6 +20,7 @@ class EventController extends Controller
 
     public function show(Event $event): View
     {
+        $this->authorize('view', $event);
         $event->load(['partner', 'comments.user', 'feedbacks']);
 
         return view('events.show', compact('event'));

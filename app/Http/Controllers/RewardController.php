@@ -13,7 +13,7 @@ class RewardController extends Controller
 
     public function index(): View
     {
-        abort_if(! auth()->user()->can('reward.browse'), 403);
+        $this->authorize('viewAny', Reward::class);
 
         $rewards = Reward::where('is_active', true)
                          ->where(fn($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
@@ -26,7 +26,7 @@ class RewardController extends Controller
 
     public function redeem(Reward $reward): RedirectResponse
     {
-        abort_if(! auth()->user()->can('reward.redeem'), 403);
+        $this->authorize('redeem', $reward);
 
         $this->redeem->execute(auth()->user(), $reward);
 
