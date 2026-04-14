@@ -39,6 +39,10 @@
                             {{ __('Admin') }}
                         </x-nav-link>
                     @endif
+
+                    <x-nav-link :href="route('messages.index')" :active="request()->routeIs('messages.*')">
+                        💬
+                    </x-nav-link>
                 </div>
             </div>
 

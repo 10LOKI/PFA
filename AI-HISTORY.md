@@ -209,6 +209,36 @@
 ## Milestone 14: Navigation UI
 - [x] navigation.blade.php redesigné avec palette ActTogether
 - [x] Menu dynamique par rôle (student/partner/admin)
-- [x] Blade::role() directives ajoutées dans AppServiceProvider
 - [x] Points balance affiché pour étudiants
 - [x] Grade affiché dans dropdown utilisateur
+
+## Milestone 15: Dashboards UI
+- [x] student.blade.php - stats cards, grade progress bar, quick actions
+- [x] partner.blade.php - KYC warning, stats, quick actions
+- [x] admin.blade.php - stats cards (students/partners/pending/KYC), quick actions
+- [x] Palette: #FFDCDC, #FFE8CD, #FFD6BA, #D4A574, #FFF2EB
+
+## Milestone 16: Role-Based Dashboard Routes
+- [x] DashboardController créé avec méthodes: index, student, partner, admin
+- [x] Routes: /dashboard → redirect basé sur role
+- [x] /dashboard/student, /dashboard/partner, /dashboard/admin directs
+- [x] Login redirect vers dashboard rôle-specific
+- [x] Old dashboard.blade.php supprimé
+
+## Milestone 17: Events Display
+- [x] EventPolicy simplifié: viewAny=true, view=true, create=isPartner
+- [x] EventController@index: affiche tous les événements (pas seulement approved)
+- [x] EventController@show: retiré load() relations (comments, feedbacks)
+- [x] Tables créées: comments, feedback
+
+## Milestone 18: User Model Fixes
+- [x] hasRole() ajouté dans User.php pour compatibilité Spatie
+
+## Milestone 19: Private Messages System
+- [x] Tables: conversations, messages, conversation_user (created)
+- [x] Models: Conversation (participants, messages), Message (sender, read_at)
+- [x] User relationships: conversations(), sentMessages()
+- [x] MessageController: index, show, store, start
+- [x] Routes: /messages, /messages/{conversation}, /messages/start
+- [x] Views: messages/index, messages/show (styled with palette #D4A574)
+- [x] Navigation: link to messages added

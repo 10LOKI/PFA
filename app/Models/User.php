@@ -62,6 +62,12 @@ class User extends Authenticatable
         return $this->role === 'student';
     }
 
+    // Spatie compatibility
+    public function hasRole($role): bool
+    {
+        return $this->role === $role;
+    }
+
     // --- Relationships ---
     public function establishment(): BelongsTo
     {
@@ -99,6 +105,17 @@ class User extends Authenticatable
     public function hostedEvents(): HasMany
     {
         return $this->hasMany(Event::class, 'partner_id');
+    }
+
+    public function conversations(): BelongsToMany
+    {
+        return $this->belongsToMany(Conversation::class, 'conversation_user')
+            ->withTimestamps();
+    }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
     }
 
     public function comments(): HasMany
