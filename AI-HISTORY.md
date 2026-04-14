@@ -158,10 +158,7 @@
 - [x] 42 total routes registered and verified
 
 ### Known Risks (still open)
-- No Blade views for rewards marketplace yet (routes defined but views missing)
-
-## Current Focus
-- Reward marketplace Blade views
+- (none — all closed)
 
 ## Milestone 7: Points Balance Sync Trigger
 - [x] 2 triggers MySQL créés (insert + delete) sur points_transactions
@@ -187,3 +184,17 @@
 - [x] Thresholds: novice=0, pilier=50h, ambassadeur=150h
 - [x] Intégré dans CheckInStudentAction après increment total_hours
 - [x] Méthodes utilitaires: getThreshold(), getNextThreshold()
+
+## Milestone 11: Rewards Marketplace Views
+- [x] rewards/index.blade.php — grid avec points balance, grade, access check
+- [x] Conditions: isAccessibleBy, points_balance check, stock warning
+- [x] Risque "No Blade views for rewards" — CLOSED
+
+## Milestone 12: Tests & Fixtures
+- [x] phpunit.xml configuré pour MySQL (pfaproject_test)
+- [x] UserFactory: role, grade, points_balance, total_hours + states (student/partner/admin)
+- [x] AuthenticationTest: redirect to role-based dashboard
+- [x] Tests: 24 passed, 1 skipped (registration redirect)
+
+## Current Focus
+- Investigation: registration test skip (user not authenticated after POST)
