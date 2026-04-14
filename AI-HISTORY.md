@@ -205,3 +205,10 @@
 - [x] Features: Check-in QR, Points Garantis, Marketplace
 - [x] Stats section fake
 - [x] Footer avec liens
+
+## Milestone 14: Navigation UI
+- [x] navigation.blade.php redesigné avec palette ActTogether
+- [x] Menu dynamique par rôle (student/partner/admin)
+- [x] Blade::role() directives ajoutées dans AppServiceProvider
+- [x] Points balance affiché pour étudiants
+- [x] Grade affiché dans dropdown utilisateur
