@@ -138,3 +138,31 @@
 ## Current Focus
 - Laravel Policies (Event, Partner, Admin)
 - Role-based dashboard redirect post-login
+
+## Milestone 6: Policies & Role-Based Dashboards
+- **Date:** April 2026
+
+### Laravel Policies (3 policies — authorize() risk closed)
+- [x] `EventPolicy` — viewAny, view (approved|owner|admin), create (partner+permission), update (owner+not cancelled), delete (owner), approve (admin)
+- [x] `PartnerPolicy` — approve/reject (admin+permission), update (owner only)
+- [x] `RewardPolicy` — viewAny (reward.browse), redeem (student+permission+isAvailable+isAccessibleBy)
+- [x] All `abort_if(can())` replaced by `$this->authorize()` in EventController, RewardController, KycController
+- [x] Known risk "authorize() without Policy" — CLOSED
+
+### Role-Based Dashboard Redirect
+- [x] `AuthenticatedSessionController` — match($role) redirects to dashboard.student / dashboard.partner / dashboard.admin
+- [x] 3 dashboard routes added: GET /dashboard/student, /dashboard/partner, /dashboard/admin
+- [x] `dashboard/student.blade.php` — points balance, certified hours, grade, links to events + marketplace
+- [x] `dashboard/partner.blade.php` — KYC warning if unverified, total/active events count, create event link
+- [x] `dashboard/admin.blade.php` — students/partners/pending events/KYC queue counters, admin links
+- [x] 42 total routes registered and verified
+
+### Known Risks (still open)
+- `users.points_balance` mutable — mitigated by CreditPointsAction, no DB-level constraint yet
+- No Blade views for events/rewards yet — controllers return views that don't exist
+- No QR code generation logic yet (qr_code_token is nullable, never populated)
+
+## Current Focus
+- Blade views for events (index, show, create, edit)
+- QR code generation for events (GenerateQrAction)
+- Grade upgrade logic (UpgradeGradeAction)

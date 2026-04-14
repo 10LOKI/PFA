@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Event\GenerateQrAction;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class EventController extends Controller
 {
+    public function __construct(private GenerateQrAction $generateQr) {}
     public function index(): View
     {
         $events = Event::where('status', 'approved')
