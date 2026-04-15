@@ -6,8 +6,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
 use App\Http\Controllers\MessageController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\UserController;
+use App\Models\Event;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'));
@@ -29,6 +33,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
     Route::post('/messages/start', [MessageController::class, 'start'])->name('messages.start');
 
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.markRead');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllRead');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount'])->name('notifications.unreadCount');
+
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,6 +55,10 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
     Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
 
+    // Admin - Event approval
+    Route::patch('events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
+    Route::patch('events/{event}/reject', [EventController::class, 'reject'])->name('events.reject');
+
     // Rewards marketplace
     Route::get('rewards', [RewardController::class, 'index'])->name('rewards.index');
     Route::post('rewards/{reward}/redeem', [RewardController::class, 'redeem'])->name('rewards.redeem');
@@ -58,3 +72,34 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+// Debug route to test notifications - access as logged in user
+Route::middleware('auth')->get('/debug-notification', function () {
+    $event = Event::latest()->first();
+
+    if (! $event) {
+        return response()->json(['error' => 'No events found']);
+    }
+
+    // Get other users (not current user)
+    $users = User::where('id', '!=', auth()->id())->get();
+
+    // Save to custom notifications table
+    foreach ($users as $user) {
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'event_created',
+            'title' => 'Nouvel événement',
+            'message' => $event->title,
+            'link' => route('events.show', $event),
+            'event_id' => $event->id,
+            'read' => false,
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Notification sent to '.$users->count().' users',
+        'event' => $event->title,
+    ]);
+});

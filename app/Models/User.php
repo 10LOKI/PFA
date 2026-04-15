@@ -127,4 +127,17 @@ class User extends Authenticatable
     {
         return $this->hasMany(Feedback::class);
     }
+
+    // Override Notifiable trait - use our custom notifications table
+    public function notifications($class = null)
+    {
+        return $this->morphToMany(Notification::class, 'notifiable', 'notification_usages')
+            ->withPivot(['read_at', 'created_at', 'updated_at']);
+    }
+
+    // Use custom notifications table directly
+    public function customNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
 }

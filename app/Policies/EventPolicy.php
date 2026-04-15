@@ -36,7 +36,7 @@ class EventPolicy
 
     public function approve(User $user, Event $event): bool
     {
-        return $user->can('event.approve') && $user->isAdmin();
+        return $user->isAdmin();
     }
 
     public function generateQr(User $user, Event $event): bool
