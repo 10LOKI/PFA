@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,10 @@ class MessageController extends Controller
     {
         $conversations = auth()->user()
             ->conversations()
-            ->with(['participants', 'latestMessage'])
+            ->with('participants')
+            ->with(['messages' => function ($q) {
+                $q->latest()->limit(1);
+            }])
             ->latest('updated_at')
             ->get();
 

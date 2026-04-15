@@ -19,6 +19,7 @@
                     @forelse($conversations as $conversation)
                         @php
                             $other = $conversation->participants->where('id', '!=', auth()->id())->first();
+                            $lastMessage = $conversation->messages->first();
                             $unread = $conversation->messages()
                                 ->where('sender_id', '!=', auth()->id())
                                 ->whereNull('read_at')
@@ -35,14 +36,14 @@
                                 <div class="flex-1">
                                     <div class="flex items-center justify-between">
                                         <p class="font-medium text-gray-900">{{ $other->name }}</p>
-                                        @if($conversation->latestMessage)
+                                        @if($lastMessage)
                                             <span class="text-xs text-gray-500">
-                                                {{ $conversation->latestMessage->created_at->diffForHumans() }}
+                                                {{ $lastMessage->created_at->diffForHumans() }}
                                             </span>
                                         @endif
                                     </div>
                                     <p class="text-sm text-gray-500 truncate">
-                                        {{ $conversation->latestMessage->body ?? 'Pas de messages' }}
+                                        {{ $lastMessage->body ?? 'Pas de messages' }}
                                     </p>
                                 </div>
                                 @if($unread > 0)
