@@ -8,8 +8,11 @@
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-                <div class="p-6 border-b border-gray-100">
+                <div class="p-6 border-b border-gray-100 flex items-center justify-between">
                     <h3 class="text-lg font-semibold text-gray-800">Conversations</h3>
+                    <a href="{{ route('users.index') }}" class="px-4 py-2 bg-[#D4A574] text-white rounded-lg hover:bg-[#c49463] transition text-sm">
+                        New Message
+                    </a>
                 </div>
 
                 <div class="divide-y divide-gray-100">

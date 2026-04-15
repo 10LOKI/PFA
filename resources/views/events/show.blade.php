@@ -117,6 +117,41 @@
                             <div class="text-center text-gray-500">Event is full</div>
                         @endif
                     </div>
+
+                    {{-- Participants --}}
+                    <details class="bg-white shadow-sm rounded-lg p-6">
+                        <summary class="font-semibold cursor-pointer hover:text-[#D4A574] flex items-center justify-between">
+                            <span>Participants ({{ $event->participants()->count() }})</span>
+                            <svg class="w-4 h-4 transform transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </summary>
+                        <div class="mt-4 space-y-3">
+                            @forelse($event->participants as $participant)
+                                <div class="flex items-center justify-between p-2 bg-[#FFF2EB] rounded-lg">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-8 h-8 bg-[#FFDCDC] rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-[#D4A574]">
+                                                {{ strtoupper($participant->name[0] ?? '?') }}
+                                            </span>
+                                        </div>
+                                        <span class="text-sm text-gray-700">{{ $participant->name }}</span>
+                                    </div>
+                                    @if($participant->id !== auth()->id())
+                                        <form action="{{ route('messages.start') }}" method="post">
+                                            @csrf
+                                            <input type="hidden" name="user_id" value="{{ $participant->id }}">
+                                            <button type="submit" class="text-xs px-2 py-1 bg-[#D4A574] text-white rounded hover:bg-[#c49463]">
+                                                Message
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            @empty
+                                <p class="text-sm text-gray-500">No participants yet</p>
+                            @endforelse
+                        </div>
+                    </details>
                 </div>
             </div>
         </div>

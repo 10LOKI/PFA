@@ -24,6 +24,8 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
+        $event->load('participants');
+
         return view('events.show', compact('event'));
     }
 
