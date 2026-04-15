@@ -10,10 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasPermissions, Notifiable;
+    use HasFactory, HasPermissions, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -49,7 +50,7 @@ class User extends Authenticatable
     // --- Role helpers ---
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->hasRole('admin');
     }
 
     public function isPartner(): bool
