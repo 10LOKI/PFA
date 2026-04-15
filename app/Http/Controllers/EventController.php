@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\Event\GenerateQrAction;
 use App\Models\Event;
+use App\Models\Notification as NotificationModel;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,7 +17,14 @@ class EventController extends Controller
 
     public function index(): View
     {
-        $events = Event::latest('starts_at')->paginate(12);
+        // Admins see all events, others only approved
+        if (auth()->user()->isAdmin()) {
+            $events = Event::latest('starts_at')->paginate(12);
+        } else {
+            $events = Event::where('status', 'approved')
+                ->latest('starts_at')
+                ->paginate(12);
+        }
 
         return view('events.index', compact('events'));
     }
@@ -23,6 +32,11 @@ class EventController extends Controller
     public function show(Event $event): View
     {
         $this->authorize('view', $event);
+
+        // Only show approved events to non-admins
+        if (! $event->isApproved() && ! auth()->user()->isAdmin()) {
+            abort(403);
+        }
 
         $event->load('participants');
 
@@ -56,7 +70,7 @@ class EventController extends Controller
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status'] = 'approved'; // Auto-approve for now
+        $data['status'] = 'pending'; // Pending approval
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -64,11 +78,8 @@ class EventController extends Controller
 
         $event = Event::create($data);
 
-        $recipients = User::where('id', '!=', auth()->id())->get();
-        Notification::send($recipients, new EventCreatedNotification($event));
-
         return redirect()->route('events.show', $event)
-            ->with('success', 'Event created successfully.');
+            ->with('success', 'Event created successfully. En attente d\'approbation par l\'admin.');
     }
 
     public function edit(Event $event): View
@@ -110,6 +121,40 @@ class EventController extends Controller
 
         return redirect()->route('events.index')
             ->with('success', 'Event cancelled.');
+    }
+
+    public function approve(Event $event): RedirectResponse
+    {
+        $this->authorize('approve', $event);
+
+        $event->update(['status' => 'approved']);
+
+        // Notify students about the new approved event
+        $students = User::where('role', 'student')->get();
+        foreach ($students as $student) {
+            NotificationModel::create([
+                'user_id' => $student->id,
+                'type' => 'event_approved',
+                'title' => 'Nouvel événement approuvé',
+                'message' => $event->title,
+                'link' => route('events.show', $event),
+                'event_id' => $event->id,
+                'read' => false,
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Event approved.');
+    }
+
+    public function reject(Event $event): RedirectResponse
+    {
+        $this->authorize('approve', $event);
+
+        $event->update(['status' => 'rejected']);
+
+        return redirect()->back()
+            ->with('success', 'Event rejected.');
     }
 
     public function qr(Event $event): Response

@@ -13,18 +13,11 @@ class EventCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public function __construct(public Event $event, public int $recipientId) {}
+    public array $data;
 
-    public function broadcastOn(): array
+    public function __construct(public Event $event, public int $recipientId)
     {
-        return [
-            new PrivateChannel('notifications.'.$this->recipientId),
-        ];
-    }
-
-    public function broadcastWith(): array
-    {
-        return [
+        $this->data = [
             'event' => [
                 'id' => $this->event->id,
                 'title' => $this->event->title,
@@ -34,6 +27,13 @@ class EventCreated implements ShouldBroadcast
                 'city' => $this->event->city,
                 'link' => route('events.show', $this->event),
             ],
+        ];
+    }
+
+    public function broadcastOn(): array
+    {
+        return [
+            new PrivateChannel('notifications.'.$this->recipientId),
         ];
     }
 }
