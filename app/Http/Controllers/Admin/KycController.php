@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Partner;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
 class KycController extends Controller
 {
     public function index(): View
     {
-        $this->authorize('approve', Partner::class);
+        Gate::authorize('view', Partner::class);
 
         $pending = Partner::where('kyc_status', 'pending')
             ->with('user')
