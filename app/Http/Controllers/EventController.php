@@ -64,6 +64,9 @@ class EventController extends Controller
 
         $event = Event::create($data);
 
+        $recipients = User::where('id', '!=', auth()->id())->get();
+        Notification::send($recipients, new EventCreatedNotification($event));
+
         return redirect()->route('events.show', $event)
             ->with('success', 'Event created successfully.');
     }
