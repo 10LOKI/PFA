@@ -19,4 +19,19 @@ class RewardPolicy
             && $reward->isAvailable()
             && $reward->isAccessibleBy($user);
     }
+
+    public function create(User $user): bool
+    {
+        return $user->isPartner();
+    }
+
+    public function update(User $user, Reward $reward): bool
+    {
+        return $user->can('reward.update') && $user->id === $reward->partner_id;
+    }
+
+    public function delete(User $user, Reward $reward): bool
+    {
+        return $user->can('reward.delete') && $user->id === $reward->partner_id;
+    }
 }
