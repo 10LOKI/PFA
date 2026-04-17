@@ -305,7 +305,7 @@
             </div>
         </section>
 
-        <!-- Video Section -->
+        <!-- lvideo n9der nbedlo l we9t li bghite -->
         <section class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
             <div class="max-w-7xl mx-auto px-6">
                 <div class="text-center mb-16">
