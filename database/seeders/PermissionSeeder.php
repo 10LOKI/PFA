@@ -16,6 +16,8 @@ class PermissionSeeder extends Seeder
             'event.checkin',
             'reward.browse',
             'reward.redeem',
+            'reward.update',
+            'reward.delete',
             'comment.create',
             'feedback.create',
             'certificate.download',
