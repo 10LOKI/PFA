@@ -54,7 +54,7 @@ class Event extends Model
     {
         return $this->belongsToMany(User::class)
             ->using(EventUser::class)
-            ->withPivot(['status', 'checked_in_at', 'points_earned', 'partner_rating', 'partner_feedback'])
+            ->withPivot(['status', 'checked_in_at', 'checked_out_at', 'points_earned', 'partner_rating', 'partner_feedback'])
             ->withTimestamps();
     }
 

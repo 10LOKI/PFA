@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
@@ -53,6 +54,7 @@ Route::middleware('auth')->group(function () {
 
     // QR Check-in (partner)
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
+    Route::post('events/{event}/checkout', [CheckOutController::class, 'store'])->name('events.checkout');
     Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
 
     // Admin - Event approval
@@ -61,6 +63,11 @@ Route::middleware('auth')->group(function () {
 
     // Rewards marketplace
     Route::get('rewards', [RewardController::class, 'index'])->name('rewards.index');
+    Route::get('rewards/create', [RewardController::class, 'create'])->name('rewards.create');
+    Route::post('rewards', [RewardController::class, 'store'])->name('rewards.store');
+    Route::get('rewards/{reward}/edit', [RewardController::class, 'edit'])->name('rewards.edit');
+    Route::put('rewards/{reward}', [RewardController::class, 'update'])->name('rewards.update');
+    Route::delete('rewards/{reward}', [RewardController::class, 'destroy'])->name('rewards.destroy');
     Route::post('rewards/{reward}/redeem', [RewardController::class, 'redeem'])->name('rewards.redeem');
 
     // Admin
