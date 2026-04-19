@@ -34,6 +34,11 @@ class EventUser extends Pivot
         return $this->checked_out_at !== null;
     }
 
+    public function hasSavedToWishlist(): bool
+    {
+        return $this->status === 'wishlist';
+    }
+
     public function actualDurationInMinutes(): int
     {
         if (! $this->checked_in_at || ! $this->checked_out_at) {

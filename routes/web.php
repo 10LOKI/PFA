@@ -11,6 +11,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -51,6 +52,10 @@ Route::middleware('auth')->group(function () {
     // Event registration (student)
     Route::post('events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
     Route::delete('events/{event}/register', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
+
+    // Event wishlist (student)
+    Route::post('events/{event}/wishlist', [WishlistController::class, 'store'])->name('events.wishlist');
+    Route::delete('events/{event}/wishlist', [WishlistController::class, 'destroy'])->name('events.unwishlist');
 
     // QR Check-in (partner)
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
