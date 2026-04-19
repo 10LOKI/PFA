@@ -305,6 +305,28 @@
             </div>
         </section>
 
+        <!-- lvideo n9der nbedlo l we9t li bghite -->
+        <section class="py-24 bg-white dark:bg-gray-900 transition-colors duration-300">
+            <div class="max-w-7xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="inline-block px-4 py-1 bg-[#FFDCDC] text-[#D4A574] rounded-full text-sm font-medium mb-4">Tutoriel</span>
+                    <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-4">Guide vidéo</h2>
+                </div>
+                <div class="max-w-4xl mx-auto animate-slide-up">
+                    <div class="bg-white dark:bg-gray-700 rounded-2xl shadow-2xl overflow-hidden border-4 border-[#FFDCDC] dark:border-gray-600">
+                        <div class="aspect-video">
+                            <iframe
+                                src="https://www.youtube.com/embed/tYmvsrkN8po?autoplay=0&rel=0"
+                                class="w-full h-full"
+                                loading="lazy"
+                                allowfullscreen
+                                title="ActTogether Tutorial"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- CTA Section -->
         <section class="py-24 bg-[#FFDCDC] dark:bg-gray-800 relative overflow-hidden transition-colors duration-300">
             <div class="absolute inset-0 opacity-10 dark:opacity-5">
