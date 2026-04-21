@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasPermissions;
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'grade',
         'kyc_verified',
         'is_certified_partner',
+        'interests',
     ];
 
     protected $hidden = [
@@ -43,6 +45,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'kyc_verified' => 'boolean',
             'is_certified_partner' => 'boolean',
+            'interests' => 'array',
         ];
     }
 
@@ -126,5 +129,15 @@ class User extends Authenticatable
     public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class);
+    }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likedEvents(): MorphToMany
+    {
+        return $this->morphedByMany(Event::class, 'likeable', 'likes');
     }
 }
