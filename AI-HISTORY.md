@@ -196,6 +196,13 @@
 - [x] AuthenticationTest: redirect to role-based dashboard
 - [x] Tests: 24 passed, 1 skipped (registration redirect)
 
+## Milestone 20: Partner Code Fixes & Capabilities
+- [x] Renamed 'parteners' table to 'partners' via migration
+- [x] Updated Partner model $table to 'partners'
+- [x] Added auto-approval for KYC-approved partners in EventController
+- [x] Enhanced partner dashboard with capabilities section, reward actions, and active events for QR scanning
+- [x] Verified partner permissions: event.browse/create/update/delete/generate-qr, checkin.validate, student.rate, reward.create/update/delete
+
 ## Current Focus
 - UI: Landing Page + Navigation
 

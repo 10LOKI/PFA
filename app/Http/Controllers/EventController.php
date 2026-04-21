@@ -26,6 +26,8 @@ class EventController extends Controller
                 ->paginate(12);
         }
 
+        $categories = ['Environnement', 'Éducation', 'Santé', 'Social', 'Culture', 'Sport', 'Technologie', 'Autre'];
+
         return view('events.index', compact('events', 'categories'));
     }
 
@@ -70,7 +72,7 @@ class EventController extends Controller
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status'] = 'pending'; // Pending approval
+        $data['status'] = auth()->user()->partner?->isApproved() ? 'approved' : 'pending'; // Auto-approve for KYC approved partners
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -78,8 +80,11 @@ class EventController extends Controller
 
         $event = Event::create($data);
 
-        return redirect()->route('events.show', $event)
-            ->with('success', 'Event created successfully. En attente d\'approbation par l\'admin.');
+        $message = $data['status'] === 'approved'
+            ? 'Event created and approved successfully.'
+            : 'Event created successfully. En attente d\'approbation par l\'admin.';
+
+        return redirect()->route('events.show', $event)->with('success', $message);
     }
 
     public function edit(Event $event): View
