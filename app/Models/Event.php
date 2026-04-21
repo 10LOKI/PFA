@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Event extends Model
 {
@@ -66,5 +67,29 @@ class Event extends Model
     public function feedbacks(): MorphMany
     {
         return $this->morphMany(Feedback::class, 'feedbackable');
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function likedBy(): MorphToMany
+    {
+        return $this->morphedByMany(User::class, 'likeable', 'likes');
+    }
+
+    public function getLikesCountAttribute(): int
+    {
+        return $this->likes()->count();
+    }
+
+    public function isLikedBy(?User $user): bool
+    {
+        if (! $user) {
+            return false;
+        }
+
+        return $this->likedBy()->where('user_id', $user->id)->exists();
     }
 }

@@ -15,14 +15,17 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
 
-                    @if(auth()->user()->role === 'student')
-                        <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
-                            {{ __('Événements') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.*')">
-                            {{ __('Rewards') }}
-                        </x-nav-link>
-                    @endif
+                     @if(auth()->user()->role === 'student')
+                         <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+                             {{ __('Événements') }}
+                         </x-nav-link>
+                         <x-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.*')">
+                             {{ __('Rewards') }}
+                         </x-nav-link>
+                         <x-nav-link :href="route('wallet.index')" :active="request()->routeIs('wallet.*')">
+                             {{ __('Wallet') }}
+                         </x-nav-link>
+                     @endif
 
                     @if(auth()->user()->role === 'partner')
                         <x-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
@@ -121,14 +124,17 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
 
-            @if(auth()->user()->role === 'student')
-                <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
-                    {{ __('Événements') }}
-                </x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.*')">
-                    {{ __('Rewards') }}
-                </x-responsive-nav-link>
-            @endif
+             @if(auth()->user()->role === 'student')
+                 <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">
+                     {{ __('Événements') }}
+                 </x-responsive-nav-link>
+                 <x-responsive-nav-link :href="route('rewards.index')" :active="request()->routeIs('rewards.*')">
+                     {{ __('Rewards') }}
+                 </x-responsive-nav-link>
+                 <x-responsive-nav-link :href="route('wallet.index')" :active="request()->routeIs('wallet.*')">
+                     {{ __('Wallet') }}
+                 </x-responsive-nav-link>
+             @endif
 
             @if(auth()->user()->role === 'partner')
                 <x-responsive-nav-link :href="route('events.index')" :active="request()->routeIs('events.*')">

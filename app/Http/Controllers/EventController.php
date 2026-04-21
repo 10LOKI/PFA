@@ -15,7 +15,7 @@ class EventController extends Controller
 {
     public function __construct(private GenerateQrAction $generateQr) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
         // Admins see all events, others only approved
         if (auth()->user()->isAdmin()) {
@@ -26,7 +26,7 @@ class EventController extends Controller
                 ->paginate(12);
         }
 
-        return view('events.index', compact('events'));
+        return view('events.index', compact('events', 'categories'));
     }
 
     public function show(Event $event): View

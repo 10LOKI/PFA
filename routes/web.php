@@ -5,6 +5,8 @@ use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
+use App\Http\Controllers\LeaderboardController;
+use App\Http\Controllers\LikeController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
@@ -51,6 +53,10 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
     Route::delete('events/{event}/register', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
 
+    // Likes
+    Route::post('events/{event}/like', [LikeController::class, 'store'])->name('events.like');
+    Route::delete('events/{event}/like', [LikeController::class, 'destroy'])->name('events.unlike');
+
     // QR Check-in (partner)
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
     Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
@@ -67,6 +73,15 @@ Route::middleware('auth')->group(function () {
     Route::put('rewards/{reward}', [RewardController::class, 'update'])->name('rewards.update');
     Route::delete('rewards/{reward}', [RewardController::class, 'destroy'])->name('rewards.destroy');
     Route::post('rewards/{reward}/redeem', [RewardController::class, 'redeem'])->name('rewards.redeem');
+
+    // Wallet
+    Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
+
+    // Leaderboard
+    Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
+    Route::get('leaderboard/city/{city}', [LeaderboardController::class, 'city'])->name('leaderboard.city');
+    Route::get('leaderboard/establishment/{establishment}', [LeaderboardController::class, 'establishment'])->name('leaderboard.establishment');
+    Route::get('leaderboard/weekly', [LeaderboardController::class, 'weekly'])->name('leaderboard.weekly');
 
     // Admin
     Route::prefix('admin')->name('admin.')->group(function () {
