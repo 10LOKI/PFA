@@ -13,18 +13,58 @@ class EventController extends Controller
 {
     public function __construct(private GenerateQrAction $generateQr) {}
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $events = Event::latest('starts_at')->paginate(12);
+        $query = Event::query()->with(['partner', 'participants', 'likedBy']);
 
-        return view('events.index', compact('events'));
+        // Get unique categories for filter options
+        $categories = Event::select('category')
+            ->whereNotNull('category')
+            ->distinct()
+            ->orderBy('category')
+            ->pluck('category')
+            ->toArray();
+
+        // City filter: default to user's city if not provided
+        $city = $request->filled('city') ? $request->city : (auth()->check() ? auth()->user()->city : null);
+        if ($city) {
+            $query->where('city', 'like', '%'.$city.'%');
+        }
+
+        // Interests filter: use manual selection if provided; else fallback to user profile interests
+        $selectedInterests = $request->input('interests', []);
+        if (! empty($selectedInterests)) {
+            $query->whereIn('category', $selectedInterests);
+        } elseif (auth()->check() && empty($selectedInterests) && ! $request->has('interests')) {
+            $userInterests = auth()->user()->interests ?? [];
+            if (! empty($userInterests)) {
+                $query->whereIn('category', $userInterests);
+            }
+        }
+
+        // Keyword search
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
+        // Default sorting: upcoming events first
+        $query->where('starts_at', '>', now())
+            ->orderBy('starts_at', 'asc');
+
+        $events = $query->paginate(12)->withQueryString();
+
+        return view('events.index', compact('events', 'categories'));
     }
 
     public function show(Event $event): View
     {
         $this->authorize('view', $event);
 
-        $event->load('participants');
+        $event->load(['participants', 'likedBy']);
 
         return view('events.show', compact('event'));
     }
