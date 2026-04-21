@@ -58,9 +58,9 @@
                         en récompenses
                     </h1>
                     <p class="text-xl text-[#E0E0E0]/80 mb-8 max-w-lg font-mono leading-relaxed">
-                        > La plateforme de gamification du bénévolat<br>
-                        > Accumulez des points, gravissez les grades<br>
-                        > Échangez contre des rewards exclusives
+                        La plateforme de gamification du bénévolat<br>
+                        Accumulez des points, gravissez les grades<br>
+                        Échangez contre des rewards exclusives
                     </p>
                     <div class="flex flex-wrap gap-4">
                         <a href="{{ route('register') }}" class="btn-skew border-2 border-[#FF00FF] bg-[#FF00FF] text-black px-6 py-3 font-mono uppercase tracking-wider hover:opacity-80 hover:shadow-[0_0_20px_#FF00FF] flex items-center gap-2">
@@ -176,7 +176,7 @@
                             </svg>
                         </div>
                         <h3 class="text-2xl font-heading font-bold text-[#00FFFF] mb-4 uppercase">Check-in QR</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono">> Présence validée uniquement via scan QR physique<br>> Pas de triche possible</p>
+                        <p class="text-[#E0E0E0]/70 font-mono">Présence validée uniquement via scan QR physique<br>Pas de triche possible</p>
                         <div class="mt-6 flex items-center gap-2 text-[#00FFFF] font-mono text-sm group-hover:text-[#FF00FF] transition">
                             <span>En savoir plus</span>
                             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -191,7 +191,7 @@
                             </svg>
                         </div>
                         <h3 class="text-2xl font-heading font-bold text-[#FF00FF] mb-4 uppercase">Points Garantis</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono">> Chaque heure de bénévolat = points<br>> Multiplicateurs pour missions urgentes</p>
+                        <p class="text-[#E0E0E0]/70 font-mono">Chaque heure de bénévolat = points<br>Multiplicateurs pour missions urgentes</p>
                         <div class="mt-6 flex items-center gap-2 text-[#FF00FF] font-mono text-sm group-hover:text-[#00FFFF] transition">
                             <span>En savoir plus</span>
                             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -206,7 +206,7 @@
                             </svg>
                         </div>
                         <h3 class="text-2xl font-heading font-bold text-[#FF9900] mb-4 uppercase">Marketplace</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono">> Échangez vos points contre des rewards<br>> Grade plus élevé = plus de choix</p>
+                        <p class="text-[#E0E0E0]/70 font-mono">Échangez vos points contre des rewards<br>Grade plus élevé = plus de choix</p>
                         <div class="mt-6 flex items-center gap-2 text-[#FF9900] font-mono text-sm group-hover:text-[#FF00FF] transition">
                             <span>En savoir plus</span>
                             <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
@@ -228,22 +228,22 @@
                     <div class="text-center">
                         <div class="w-20 h-20 bg-[#00FFFF]/20 border-2 border-[#00FFFF] flex items-center justify-center mx-auto mb-6 text-3xl font-bold text-[#00FFFF] font-heading rotate-45 hover:rotate-90 transition-transform">1</div>
                         <h3 class="font-heading font-bold text-[#00FFFF] text-xl mb-3 uppercase">Créez un compte</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono text-sm">> Inscrivez-vous gratuitement<br>> En quelques secondes</p>
+                        <p class="text-[#E0E0E0]/70 font-mono text-sm">Inscrivez-vous gratuitement<br>En quelques secondes</p>
                     </div>
                     <div class="text-center">
                         <div class="w-20 h-20 bg-[#FF00FF]/20 border-2 border-[#FF00FF] flex items-center justify-center mx-auto mb-6 text-3xl font-bold text-[#FF00FF] font-heading rotate-45 hover:rotate-90 transition-transform">2</div>
                         <h3 class="font-heading font-bold text-[#FF00FF] text-xl mb-3 uppercase">Trouvez un événement</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono text-sm">> Parcourez les événements<br>> Près de chez vous</p>
+                        <p class="text-[#E0E0E0]/70 font-mono text-sm">Parcourez les événements<br>Près de chez vous</p>
                     </div>
                     <div class="text-center">
                         <div class="w-20 h-20 bg-[#FF9900]/20 border-2 border-[#FF9900] flex items-center justify-center mx-auto mb-6 text-3xl font-bold text-[#FF9900] font-heading rotate-45 hover:rotate-90 transition-transform">3</div>
                         <h3 class="font-heading font-bold text-[#FF9900] text-xl mb-3 uppercase">Participez</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono text-sm">> Check-in via QR code<br>> Accumulez vos heures</p>
+                        <p class="text-[#E0E0E0]/70 font-mono text-sm">Check-in via QR code<br>Accumulez vos heures</p>
                     </div>
                     <div class="text-center">
                         <div class="w-20 h-20 bg-gradient-to-br from-[#FF9900] via-[#FF00FF] to-[#00FFFF] border-2 border-[#00FFFF] flex items-center justify-center mx-auto mb-6 text-3xl font-bold text-black font-heading rotate-45 hover:rotate-90 transition-transform">4</div>
                         <h3 class="font-heading font-bold text-gradient-sunset text-xl mb-3 uppercase">Échangez</h3>
-                        <p class="text-[#E0E0E0]/70 font-mono text-sm">> Convertissez vos points<br>> En rewards</p>
+                        <p class="text-[#E0E0E0]/70 font-mono text-sm">Convertissez vos points<br>En rewards</p>
                     </div>
                 </div>
             </div>
@@ -286,7 +286,7 @@
                         <div class="flex items-center gap-1 mb-4">
                             <span class="text-[#FF9900] text-lg">★★★★★</span>
                         </div>
-                        <p class="text-[#E0E0E0]/80 mb-4 font-mono"><span class="text-[#00FFFF]">&lt;Marie&gt;</span> Super plateforme ! J'ai déjà accumulé 500 points et je prépare échange contre un livre.</p>
+                        <p class="text-[#E0E0E0]/80 mb-4 font-mono"><span class="text-[#00FFFF]">&lt;Marie&gt;</span> Super plateforme ! J'ai déjà accumulé 500 points et je prépare à échanger contre un livre.</p>
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-[#00FFFF]/20 border border-[#00FFFF] rounded-none flex items-center justify-center text-[#00FFFF] font-heading font-bold rotate-45">M</div>
                             <div>
@@ -312,7 +312,7 @@
                         <div class="flex items-center gap-1 mb-4">
                             <span class="text-[#FF9900] text-lg">★★★★★</span>
                         </div>
-                        <p class="text-[#E0E0E0]/80 mb-4 font-mono"><span class="text-[#00FFFF]">&lt;Sarah&gt;</span> J'adore la progression par grades. bronze, argent, or... ça donne un vraies objectif!</p>
+                        <p class="text-[#E0E0E0]/80 mb-4 font-mono"><span class="text-[#00FFFF]">&lt;Sarah&gt;</span> J'adore la progression par grades. bronze, argent, or... ça donne de vraies objectifs!</p>
                         <div class="flex items-center gap-3">
                             <div class="w-10 h-10 bg-[#FF9900]/20 border border-[#FF9900] rounded-none flex items-center justify-center text-[#FF9900] font-heading font-bold rotate-45">S</div>
                             <div>
@@ -351,7 +351,7 @@
         <section class="py-32 relative overflow-hidden">
             <div class="max-w-5xl mx-auto px-6 text-center relative z-10">
                 <h2 class="text-6xl md:text-7xl font-heading font-black text-gradient-sunset text-glow-magenta mb-8 uppercase tracking-wider">Prêt à commencer<br>votre aventure ?</h2>
-                <p class="text-2xl text-[#E0E0E0]/80 mb-12 max-w-3xl mx-auto font-mono">> Rejoignez la communauté ActTogether<br>> Transformez votre engagement en rewards incroyable</p>
+                <p class="text-2xl text-[#E0E0E0]/80 mb-12 max-w-3xl mx-auto font-mono">Rejoignez la communauté ActTogether<br>Transformez votre engagement en rewards incroyable</p>
                 <div class="flex flex-wrap justify-center gap-6">
                     <a href="{{ route('register') }}" class="btn-skew border-4 border-[#FF00FF] bg-[#FF00FF] text-black px-10 py-5 font-mono text-xl uppercase tracking-wider hover:opacity-80 hover:shadow-[0_0_30px_#FF00FF] flex items-center gap-3">
                         <span>Créer mon compte</span>

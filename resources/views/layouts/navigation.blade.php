@@ -66,15 +66,18 @@
                     @endif
                 </a>
 
-                <!-- User Dropdown Trigger -->
-                <div class="hidden sm:flex sm:items-center sm:ms-6">
-                    <button @click="open = ! open" class="flex items-center gap-2 px-3 py-2 border-2 border-[var(--neon-magenta)] bg-[rgba(255,0,255,0.1)] hover:bg-[rgba(255,0,255,0.2)] transition-all duration-300">
+                <!-- User Info and Logout -->
+                <div class="hidden sm:flex sm:items-center sm:ms-6 gap-4">
+                    <div class="flex items-center gap-2 px-3 py-2 border-2 border-[var(--neon-magenta)] bg-[rgba(255,0,255,0.1)]">
                         <span class="text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)]">{{ Auth::user()->name }}</span>
                         <span class="text-xs text-[var(--neon-cyan)] bg-[rgba(0,255,255,0.1)] px-2 py-0.5 border border-[var(--neon-cyan)]">{{ strtoupper(Auth::user()->grade) }}</span>
-                        <svg class="w-4 h-4 text-[var(--neon-cyan)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </button>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn-skew border-2 border-[#FF00FF] bg-[#FF00FF] text-black px-4 py-2 font-mono uppercase tracking-wider hover:opacity-80">
+                            <span>LOGOUT</span>
+                        </button>
+                    </form>
                 </div>
 
                 <!-- Hamburger -->

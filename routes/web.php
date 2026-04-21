@@ -99,33 +99,33 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Debug route to test notifications - access as logged in user
-Route::middleware('auth')->get('/debug-notification', function () {
-    $event = Event::latest()->first();
+// // Debug route to test notifications - access as logged in user
+// Route::middleware('auth')->get('/debug-notification', function () {
+//     $event = Event::latest()->first();
 
-    if (! $event) {
-        return response()->json(['error' => 'No events found']);
-    }
+//     if (! $event) {
+//         return response()->json(['error' => 'No events found']);
+//     }
 
-    // Get other users (not current user)
-    $users = User::where('id', '!=', auth()->id())->get();
+//     // Get other users (not current user)
+//     $users = User::where('id', '!=', auth()->id())->get();
 
-    // Save to custom notifications table
-    foreach ($users as $user) {
-        Notification::create([
-            'user_id' => $user->id,
-            'type' => 'event_created',
-            'title' => 'Nouvel événement',
-            'message' => $event->title,
-            'link' => route('events.show', $event),
-            'event_id' => $event->id,
-            'read' => false,
-        ]);
-    }
+//     // Save to custom notifications table
+//     foreach ($users as $user) {
+//         Notification::create([
+//             'user_id' => $user->id,
+//             'type' => 'event_created',
+//             'title' => 'Nouvel événement',
+//             'message' => $event->title,
+//             'link' => route('events.show', $event),
+//             'event_id' => $event->id,
+//             'read' => false,
+//         ]);
+//     }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Notification sent to '.$users->count().' users',
-        'event' => $event->title,
-    ]);
-});
+//     return response()->json([
+//         'success' => true,
+//         'message' => 'Notification sent to '.$users->count().' users',
+//         'event' => $event->title,
+//     ]);
+// });
