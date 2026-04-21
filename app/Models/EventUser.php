@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use Illuminate\Support\Str;
 
 class EventUser extends Pivot
 {
@@ -13,7 +14,7 @@ class EventUser extends Pivot
 
     protected $fillable = [
         'event_id', 'user_id', 'status', 'checked_in_at', 'checked_out_at',
-        'points_earned', 'partner_rating', 'partner_feedback',
+        'points_earned', 'partner_rating', 'partner_feedback', 'qr_token',
     ];
 
     protected function casts(): array
@@ -22,6 +23,15 @@ class EventUser extends Pivot
             'checked_in_at' => 'datetime',
             'checked_out_at' => 'datetime',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function ($registration) {
+            if (empty($registration->qr_token)) {
+                $registration->qr_token = Str::uuid()->toString();
+            }
+        });
     }
 
     public function hasCheckedIn(): bool

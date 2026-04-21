@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\StudentEventQrMail;
 use App\Models\Event;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class EventRegistrationController extends Controller
 {
@@ -21,9 +24,24 @@ class EventRegistrationController extends Controller
 
         abort_if($alreadyRegistered, 422, 'Already registered.');
 
-        $event->participants()->attach($user->id, ['status' => 'registered']);
+        // Generate unique QR token for this registration
+        $token = Str::uuid()->toString();
 
-        return back()->with('success', 'Registration confirmed.');
+        // Attach with qr_token
+        $event->participants()->attach($user->id, [
+            'status' => 'registered',
+            'qr_token' => $token,
+        ]);
+
+        // Retrieve the registration pivot to get token
+        $registration = $event->participants()
+            ->where('user_id', $user->id)
+            ->first();
+
+        // Send QR code email
+        Mail::to($user->email)->send(new StudentEventQrMail($registration->pivot));
+
+        return back()->with('success', 'Registration confirmed. Check your email for QR code.');
     }
 
     public function destroy(Event $event): RedirectResponse

@@ -64,10 +64,6 @@
                                 @endif
                             @endif
 
-                            @if(auth()->user()->can('event.generate-qr') && auth()->id() === $event->partner_id)
-                                <a href="{{ route('events.qr', $event) }}" class="flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-orange)] hover:text-black transition-all duration-200">
-                                    <span>📱 VIEW QR CODE</span>
-                                </a>
                             @endif
                         </div>
 
@@ -121,43 +117,45 @@
                 </div>
 
                 <div class="space-y-6">
-                    {{-- Partner QR (only for event owner) --}}
-                    @if(auth()->user()->can('event.generate-qr') && auth()->id() === $event->partner_id)
-                        <div class="glass-panel border-2 border-[var(--neon-orange)] p-8 text-center relative">
-                            <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-orange)]"></div>
-                            <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-orange)]"></div>
-                            <h3 class="text-xl font-heading font-bold text-[var(--neon-orange)] mb-6 uppercase tracking-wider">CHECK-IN TERMINAL</h3>
-                            <div class="bg-white p-6 inline-block rounded-lg mb-4 shadow-[var(--glow-orange)]">
-                                <img src="{{ route('events.qr', $event) }}" alt="QR Code" class="w-48 h-48">
-                            </div>
-                            <p class="text-sm font-mono text-[var(--chrome-text)]/60 mb-6">SCAN TO VALIDATE STUDENT PRESENCE</p>
+                     {{-- Partner Check-in Terminal --}}
+                     @if(auth()->user()->can('checkin.validate') && auth()->id() === $event->partner_id)
+                         <div class="glass-panel border-2 border-[var(--neon-orange)] p-8 text-center relative">
+                             <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-orange)]"></div>
+                             <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-orange)]"></div>
+                             <h3 class="text-xl font-heading font-bold text-[var(--neon-orange)] mb-6 uppercase tracking-wider">CHECK-IN TERMINAL</h3>
 
-                            {{-- Check-in form --}}
-                            <form action="{{ route('events.checkin', $event) }}" method="POST" class="space-y-4">
-                                @csrf
-                                <input type="text" name="qr_token" placeholder="[ENTER QR TOKEN]" 
-                                       class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all"
-                                       required>
-                                <select name="student_id" class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all" required>
-                                    <option value="">[ SELECT STUDENT ]</option>
-                                    @foreach($event->participants()->wherePivot('status', 'registered')->get() as $participant)
-                                        <option value="{{ $participant->id }}">{{ strtoupper($participant->name) }} ({{ $participant->grade }})</option>
-                                    @endforeach
-                                </select>
-                                <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-sm uppercase tracking-widest hover:shadow-[var(--glow-cyan)] transition-all duration-200">
-                                    <span>CONFIRM CHECK-IN</span>
-                                </button>
-                            </form>
-                        </div>
-                    @endif
+                             {{-- QR Scanner / Token Input --}}
+                             <div class="space-y-4">
+                                 <p class="text-sm font-mono text-[var(--chrome-text)]/60">SCAN STUDENT QR CODE OR ENTER TOKEN</p>
+                                 <input type="text" id="qr-token-input" placeholder="[ PASTE QR TOKEN ]" 
+                                        class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all"
+                                        required>
+                                 <button type="button" onclick="submitCheckIn()" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-sm uppercase tracking-widest hover:shadow-[var(--glow-cyan)] transition-all duration-200">
+                                     <span>CONFIRM CHECK-IN</span>
+                                 </button>
+                                 <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-2">OR use camera scanner (paste token if fails)</p>
+                             </div>
+
+                              <script>
+                              function submitCheckIn() {
+                                  const token = document.getElementById('qr-token-input').value.trim();
+                                  if (!token) {
+                                      alert('Please enter or scan a QR token.');
+                                      return;
+                                  }
+                                  window.location.href = "{{ url('/checkin') }}/" + encodeURIComponent(token);
+                              }
+                              </script>
+                         </div>
+                     @endif
 
                     {{-- Registration / Status --}}
                     <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
                         <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-[var(--neon-cyan)]"></div>
                         <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-[var(--neon-cyan)]"></div>
                         @php
-                            $isRegistered = $event->participants()->where('user_id', auth()->id())->exists();
-                            $pivot = $isRegistered ? $event->participants()->where('user_id', auth()->id())->first()->pivot : null;
+                            $isRegistered = $myRegistration !== null;
+                            $pivot = $myRegistration ? $myRegistration->pivot : null;
                         @endphp
 
                         @if($isRegistered)
@@ -170,10 +168,22 @@
                                 @else
                                     <div class="border-2 border-[var(--neon-orange)] bg-[rgba(255,153,0,0.1)] p-6 mb-6">
                                         <p class="text-2xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900] mb-2">📋 AWAITING CHECK-IN</p>
-                                        <p class="text-sm font-mono text-[var(--chrome-text)]">PRESENT AT VENUE AND SCAN QR</p>
+                                        <p class="text-sm font-mono text-[var(--chrome-text)]">PRESENT QR CODE AT VENUE</p>
                                     </div>
                                 @endif
-                                <form action="{{ route('events.unregister', $event) }}" method="POST">
+
+                                {{-- Student's Personal QR Code --}}
+                                @if($pivot && $pivot->qr_token)
+                                    <div class="mt-6 p-4 border-2 border-[var(--neon-cyan)] bg-[rgba(0,255,255,0.05)]">
+                                        <p class="text-sm font-mono text-[var(--neon-cyan)] uppercase tracking-wider mb-3">Your Check-In QR</p>
+                                        <div class="flex justify-center">
+                                            {!! app(App\Actions\Event\GenerateStudentQrAction::class)->execute($pivot) !!}
+                                        </div>
+                                        <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-3">Scan this at the event to check in</p>
+                                    </div>
+                                @endif
+
+                                <form action="{{ route('events.unregister', $event) }}" method="POST" class="mt-6">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="px-6 py-3 border-2 border-red-500 text-red-500 font-mono uppercase tracking-widest hover:bg-red-500 hover:text-black transition-all duration-200">

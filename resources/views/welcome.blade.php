@@ -73,7 +73,7 @@
                         </a>
                     </div>
                 </div>
-            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative">
+            <!-- <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center relative">
                 <div class="animate-slide-up">
                     <div class="inline-flex items-center gap-2 bg-white dark:bg-gray-700 px-4 py-2 rounded-full shadow mb-6">
                         <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
@@ -98,7 +98,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/></svg>
                         </a>
                     </div>
-                </div>
+                </div> -->
                 <div class="hidden md:block animate-scale-in">
                     <div class="glass-panel border-2 border-[#00FFFF] rounded-none p-8 shadow-[0_0_20px_rgba(0,255,255,0.2)] relative">
                         <div class="absolute -top-4 -right-4 text-4xl animate-float text-[#FF9900]">🌟</div>

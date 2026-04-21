@@ -1,86 +1,104 @@
 <mxfile host="65bd71144e">
     <diagram id="i_wuJ86m_YWfhFp2LVEB" name="Page-1">
-        <mxGraphModel dx="2270" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="1068" dy="453" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="system_boundary" value="Plateforme actTogether" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" vertex="1" parent="1">
+                <mxCell id="system_boundary" value="Plateforme actTogether" style="swimlane;whiteSpace=wrap;html=1;startSize=23;" parent="1" vertex="1">
                     <mxGeometry x="180" y="40" width="810" height="1030" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_auth" value="S&#39;inscrire" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_auth" value="S&#39;inscrire" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="170" y="40" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="actor_student" value="Étudiant" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="actor_student" value="Étudiant" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="-80" y="620" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_s1" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_student" target="uc_explore">
+                <mxCell id="edge_s1" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_student" target="uc_explore" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_explore" value="Consulter les missions" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_explore" value="Consulter les missions" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="80" y="550" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_s2" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_student" target="uc_join">
+                <mxCell id="edge_s2" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_student" target="uc_join" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_join" value="S&#39;inscrire à un événement" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_join" value="S&#39;inscrire à un événement" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="80" y="630" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_s3" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_student" target="uc_redeem">
+                <mxCell id="edge_s3" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_student" target="uc_redeem" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_redeem" value="Échanger points contre récompense" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_redeem" value="Échanger points contre récompense" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="80" y="710" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_s4" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_student" target="uc_dashboard">
+                <mxCell id="edge_s4" style="endArrow=none;html=1;exitX=1;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_student" target="uc_dashboard" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_dashboard" value="Consulter solde &amp; badges" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_dashboard" value="Consulter solde &amp; badges" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="80" y="790" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_validate" value="Valider présences &amp; distribuer points" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_validate" value="Valider présences &amp; distribuer points" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="460" y="600" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_mod" value="Modérer utilisateurs &amp; events" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_mod" value="Modérer utilisateurs &amp; events" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="460" y="680" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_create_event" value="Sponsoriser un événement" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_create_event" value="Sponsoriser un événement" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="460" y="820" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_add_reward" value="Ajouter bons d&#39;achat" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_add_reward" value="Ajouter bons d&#39;achat" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="460" y="900" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="uc_stats" value="Consulter impact RSE" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="uc_stats" value="Consulter impact RSE" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="460" y="980" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="actor_partner" value="Partenaire (Entreprise)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="actor_partner" value="Partenaire (Entreprise)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="700" y="830" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_p1" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_partner" target="uc_create_event">
+                <mxCell id="edge_p1" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_partner" target="uc_create_event" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_p2" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_partner" target="uc_add_reward">
+                <mxCell id="edge_p2" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_partner" target="uc_add_reward" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_p3" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_partner" target="uc_stats">
+                <mxCell id="edge_p3" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_partner" target="uc_stats" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="actor_admin" value="Administrateur" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="actor_admin" value="Administrateur" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="700" y="530" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_a1" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_admin" target="uc_validate">
+                <mxCell id="edge_a1" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_admin" target="uc_validate" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="edge_a2" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="system_boundary" source="actor_admin" target="uc_mod">
+                <mxCell id="edge_a2" style="endArrow=none;html=1;exitX=0;exitY=0.333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="system_boundary" source="actor_admin" target="uc_mod" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="4" value="Gerer son profile" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="4" value="Gerer son profile" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="175" y="240" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="3" value="se deconnecter" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="3" value="se deconnecter" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="175" y="170" width="140" height="50" as="geometry"/>
                 </mxCell>
-                <mxCell id="2" value="se connecter" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                <mxCell id="2" value="se connecter" style="ellipse;whiteSpace=wrap;html=1;" parent="system_boundary" vertex="1">
                     <mxGeometry x="175" y="100" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="10" value="Check in avec le QRCODE" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="360" y="40" width="140" height="70" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="Check out avec le QRCODE" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="520" y="80" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="8" value="Gerer son profile" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="600" y="160" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="Gerer son profile" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="630" y="220" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="6" value="Gerer son profile" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="490" y="220" width="140" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="Scanner le code QR" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="system_boundary">
+                    <mxGeometry x="420" y="150" width="140" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

@@ -2,19 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Event\GenerateQrAction;
 use App\Models\Event;
 use App\Models\Notification as NotificationModel;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\View\View;
 
 class EventController extends Controller
 {
-    public function __construct(private GenerateQrAction $generateQr) {}
-
     public function index(Request $request): View
     {
         // Admins see all events, others only approved
@@ -35,14 +31,20 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        // Only show approved events to non-admins
         if (! $event->isApproved() && ! auth()->user()->isAdmin()) {
             abort(403);
         }
 
         $event->load('participants');
 
-        return view('events.show', compact('event'));
+        $myRegistration = null;
+        if (auth()->check()) {
+            $myRegistration = $event->participants()
+                ->where('user_id', auth()->id())
+                ->first();
+        }
+
+        return view('events.show', compact('event', 'myRegistration'));
     }
 
     public function create(): View
@@ -72,7 +74,7 @@ class EventController extends Controller
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status'] = auth()->user()->partner?->isApproved() ? 'approved' : 'pending'; // Auto-approve for KYC approved partners
+        $data['status'] = auth()->user()->partner?->isApproved() ? 'approved' : 'pending';
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -160,18 +162,5 @@ class EventController extends Controller
 
         return redirect()->back()
             ->with('success', 'Event rejected.');
-    }
-
-    public function qr(Event $event): Response
-    {
-        $this->authorize('generate-qr', $event);
-
-        if (! $event->qr_code_token) {
-            $event = $this->generateQr->execute($event);
-        }
-
-        $svg = $this->generateQr->execute($event);
-
-        return response($svg, 200, ['Content-Type' => 'image/svg+xml']);
     }
 }

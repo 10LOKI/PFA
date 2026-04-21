@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\KycController;
-use App\Http\Controllers\CheckInController;
 use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
@@ -62,10 +61,10 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/like', [LikeController::class, 'store'])->name('events.like');
     Route::delete('events/{event}/like', [LikeController::class, 'destroy'])->name('events.unlike');
 
-    // QR Check-in (partner)
-    Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
+    // QR Check-in (partner) - new token-based
+    Route::match(['get', 'post'], '/checkin/{token}', [StudentCheckInController::class, '__invoke'])->name('checkin.scan');
     Route::post('events/{event}/checkout', [CheckOutController::class, 'store'])->name('events.checkout');
-    Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
+    // Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr'); // removed
 
     // Admin - Event approval
     Route::patch('events/{event}/approve', [EventController::class, 'approve'])->name('events.approve');
