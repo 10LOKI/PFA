@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\CheckInController;
+use App\Http\Controllers\CheckOutController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WishlistController;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -53,12 +55,16 @@ Route::middleware('auth')->group(function () {
     Route::post('events/{event}/register', [EventRegistrationController::class, 'store'])->name('events.register');
     Route::delete('events/{event}/register', [EventRegistrationController::class, 'destroy'])->name('events.unregister');
 
+    // Event wishlist (student)
+    Route::post('events/{event}/wishlist', [WishlistController::class, 'store'])->name('events.wishlist');
+    Route::delete('events/{event}/wishlist', [WishlistController::class, 'destroy'])->name('events.unwishlist');
     // Likes
     Route::post('events/{event}/like', [LikeController::class, 'store'])->name('events.like');
     Route::delete('events/{event}/like', [LikeController::class, 'destroy'])->name('events.unlike');
 
     // QR Check-in (partner)
     Route::post('events/{event}/checkin', [CheckInController::class, 'store'])->name('events.checkin');
+    Route::post('events/{event}/checkout', [CheckOutController::class, 'store'])->name('events.checkout');
     Route::get('events/{event}/qr', [EventController::class, 'qr'])->name('events.qr');
 
     // Admin - Event approval
