@@ -11,10 +11,11 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasPermissions, Notifiable;
+    use HasFactory, HasPermissions, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -52,7 +53,7 @@ class User extends Authenticatable
     // --- Role helpers ---
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->hasRole('admin');
     }
 
     public function isPartner(): bool
@@ -131,13 +132,16 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 
-    public function likes(): HasMany
+    // Override Notifiable trait - use our custom notifications table
+    public function notifications($class = null)
     {
-        return $this->hasMany(Like::class);
+        return $this->morphToMany(Notification::class, 'notifiable', 'notification_usages')
+            ->withPivot(['read_at', 'created_at', 'updated_at']);
     }
 
-    public function likedEvents(): MorphToMany
+    // Use custom notifications table directly
+    public function customNotifications(): HasMany
     {
-        return $this->morphedByMany(Event::class, 'likeable', 'likes');
+        return $this->hasMany(Notification::class, 'user_id');
     }
 }

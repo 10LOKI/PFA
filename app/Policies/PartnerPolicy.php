@@ -7,14 +7,19 @@ use App\Models\User;
 
 class PartnerPolicy
 {
+    public function view(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function approve(User $user, Partner $partner): bool
     {
-        return $user->can('partner.kyc-approve') && $user->isAdmin();
+        return $user->isAdmin();
     }
 
     public function reject(User $user, Partner $partner): bool
     {
-        return $user->can('partner.kyc-reject') && $user->isAdmin();
+        return $user->isAdmin();
     }
 
     public function update(User $user, Partner $partner): bool

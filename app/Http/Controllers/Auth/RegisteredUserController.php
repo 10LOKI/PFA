@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Actions\Auth\RegisterUserAction;
 use App\Http\Controllers\Controller;
+use App\Models\Partner;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -40,6 +41,14 @@ class RegisteredUserController extends Controller
         $user = (new RegisterUserAction)->execute(
             $request->only('name', 'email', 'password', 'role')
         );
+
+        if ($user->role === 'partner') {
+            Partner::create([
+                'user_id' => $user->id,
+                'company_name' => $user->name,
+                'kyc_status' => 'pending',
+            ]);
+        }
 
         event(new Registered($user));
 

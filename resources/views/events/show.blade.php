@@ -15,16 +15,25 @@
                         <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-64 object-cover rounded-lg" alt="{{ $event->title }}">
                     @endif
 
-                     {{-- Info --}}
-                     <div class="bg-white shadow-sm rounded-lg p-6">
-                         <div class="flex items-center justify-between mb-4">
-                             <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
-                                 {{ $event->category ?? 'General' }}
-                             </span>
-                             <div class="flex items-center gap-4">
-                                 <span class="text-2xl font-bold text-green-600">{{ $event->effectivePoints() }} pts</span>
-                             </div>
-                         </div>
+                    {{-- Info --}}
+                    <div class="bg-white shadow-sm rounded-lg p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
+                                {{ $event->category ?? 'General' }}
+                            </span>
+                            <div class="flex items-center gap-2">
+                                @if($event->status === 'pending')
+                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">En attente</span>
+                                @elseif($event->status === 'approved')
+                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Approuvé</span>
+                                @elseif($event->status === 'rejected')
+                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Rejeté</span>
+                                @elseif($event->status === 'cancelled')
+                                    <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Annulé</span>
+                                @endif
+                                <span class="text-2xl font-bold text-green-600">{{ $event->effectivePoints() }} pts</span>
+                            </div>
+                        </div>
 
                          <p class="text-gray-700 mb-4">{{ $event->description }}</p>
 

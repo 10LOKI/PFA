@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Actions\Event\GenerateQrAction;
 use App\Models\Event;
+use App\Models\Notification as NotificationModel;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,47 +17,14 @@ class EventController extends Controller
 
     public function index(Request $request): View
     {
-        $query = Event::query()->with(['partner', 'participants', 'likedBy']);
-
-        // Get unique categories for filter options
-        $categories = Event::select('category')
-            ->whereNotNull('category')
-            ->distinct()
-            ->orderBy('category')
-            ->pluck('category')
-            ->toArray();
-
-        // City filter: default to user's city if not provided
-        $city = $request->filled('city') ? $request->city : (auth()->check() ? auth()->user()->city : null);
-        if ($city) {
-            $query->where('city', 'like', '%'.$city.'%');
+        // Admins see all events, others only approved
+        if (auth()->user()->isAdmin()) {
+            $events = Event::latest('starts_at')->paginate(12);
+        } else {
+            $events = Event::where('status', 'approved')
+                ->latest('starts_at')
+                ->paginate(12);
         }
-
-        // Interests filter: use manual selection if provided; else fallback to user profile interests
-        $selectedInterests = $request->input('interests', []);
-        if (! empty($selectedInterests)) {
-            $query->whereIn('category', $selectedInterests);
-        } elseif (auth()->check() && empty($selectedInterests) && ! $request->has('interests')) {
-            $userInterests = auth()->user()->interests ?? [];
-            if (! empty($userInterests)) {
-                $query->whereIn('category', $userInterests);
-            }
-        }
-
-        // Keyword search
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', '%'.$search.'%')
-                    ->orWhere('description', 'like', '%'.$search.'%');
-            });
-        }
-
-        // Default sorting: upcoming events first
-        $query->where('starts_at', '>', now())
-            ->orderBy('starts_at', 'asc');
-
-        $events = $query->paginate(12)->withQueryString();
 
         return view('events.index', compact('events', 'categories'));
     }
@@ -64,7 +33,12 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        $event->load(['participants', 'likedBy']);
+        // Only show approved events to non-admins
+        if (! $event->isApproved() && ! auth()->user()->isAdmin()) {
+            abort(403);
+        }
+
+        $event->load('participants');
 
         return view('events.show', compact('event'));
     }
@@ -96,7 +70,7 @@ class EventController extends Controller
         ]);
 
         $data['partner_id'] = auth()->id();
-        $data['status'] = 'approved'; // Auto-approve for now
+        $data['status'] = 'pending'; // Pending approval
 
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('events', 'public');
@@ -105,7 +79,7 @@ class EventController extends Controller
         $event = Event::create($data);
 
         return redirect()->route('events.show', $event)
-            ->with('success', 'Event created successfully.');
+            ->with('success', 'Event created successfully. En attente d\'approbation par l\'admin.');
     }
 
     public function edit(Event $event): View
@@ -147,6 +121,40 @@ class EventController extends Controller
 
         return redirect()->route('events.index')
             ->with('success', 'Event cancelled.');
+    }
+
+    public function approve(Event $event): RedirectResponse
+    {
+        $this->authorize('approve', $event);
+
+        $event->update(['status' => 'approved']);
+
+        // Notify students about the new approved event
+        $students = User::where('role', 'student')->get();
+        foreach ($students as $student) {
+            NotificationModel::create([
+                'user_id' => $student->id,
+                'type' => 'event_approved',
+                'title' => 'Nouvel événement approuvé',
+                'message' => $event->title,
+                'link' => route('events.show', $event),
+                'event_id' => $event->id,
+                'read' => false,
+            ]);
+        }
+
+        return redirect()->back()
+            ->with('success', 'Event approved.');
+    }
+
+    public function reject(Event $event): RedirectResponse
+    {
+        $this->authorize('approve', $event);
+
+        $event->update(['status' => 'rejected']);
+
+        return redirect()->back()
+            ->with('success', 'Event rejected.');
     }
 
     public function qr(Event $event): Response
