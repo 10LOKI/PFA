@@ -1,94 +1,119 @@
-{{-- @deprecated: Use Livewire or React for v2.0 --}}
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ $event->title }}
+        <h2 class="text-2xl md:text-3xl font-heading font-black text-[var(--neon-cyan)] uppercase tracking-wider drop-shadow-[0_0_15px_rgba(0,255,255,0.8)]">
+            <span class="text-glow-cyan">MISSION BRIEF</span>
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 relative z-10">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-6">
                     {{-- Image --}}
                     @if($event->image)
-                        <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-64 object-cover rounded-lg" alt="{{ $event->title }}">
+                        <div class="glass-panel border-2 border-[var(--neon-cyan)] p-2 relative">
+                            <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-[var(--neon-magenta)]"></div>
+                            <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-[var(--neon-magenta)]"></div>
+                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-64 object-cover" alt="{{ $event->title }}">
+                        </div>
                     @endif
 
-                    {{-- Info --}}
-                    <div class="bg-white shadow-sm rounded-lg p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm">
-                                {{ $event->category ?? 'General' }}
+                    {{-- Info Panel --}}
+                    <div class="glass-panel border-t-2 border-t-[var(--neon-cyan)] border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-[var(--neon-magenta)]"></div>
+                        <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-[var(--neon-magenta)]"></div>
+                        
+                        <div class="flex items-center justify-between mb-6">
+                            <span class="px-4 py-2 border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-mono text-xs uppercase tracking-widest bg-[rgba(255,153,0,0.1)]">
+                                {{ $event->category ?? 'GENERAL' }}
                             </span>
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-4">
                                 @if($event->status === 'pending')
-                                    <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm">En attente</span>
+                                    <span class="px-4 py-2 border-2 border-yellow-400 text-yellow-400 font-mono text-xs uppercase tracking-widest bg-[rgba(255,193,7,0.1)]">PENDING</span>
                                 @elseif($event->status === 'approved')
-                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm">Approuvé</span>
+                                    <span class="px-4 py-2 border-2 border-green-400 text-green-400 font-mono text-xs uppercase tracking-widest bg-[rgba(34,197,94,0.1)]">APPROVED</span>
                                 @elseif($event->status === 'rejected')
-                                    <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm">Rejeté</span>
+                                    <span class="px-4 py-2 border-2 border-red-400 text-red-400 font-mono text-xs uppercase tracking-widest bg-[rgba(239,68,68,0.1)]">REJECTED</span>
                                 @elseif($event->status === 'cancelled')
-                                    <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm">Annulé</span>
+                                    <span class="px-4 py-2 border-2 border-gray-500 text-gray-500 font-mono text-xs uppercase tracking-widest bg-[rgba(107,114,128,0.1)]">CANCELLED</span>
                                 @endif
-                                <span class="text-2xl font-bold text-green-600">{{ $event->effectivePoints() }} pts</span>
+                                <span class="text-3xl font-heading font-black text-[var(--neon-magenta)] drop-shadow-[0_0_10px_#FF00FF]">{{ $event->effectivePoints() }} <span class="text-lg">PTS</span></span>
                             </div>
                         </div>
 
-                         <p class="text-gray-700 mb-4">{{ $event->description }}</p>
+                         <p class="text-[var(--chrome-text)] text-lg mb-6 leading-relaxed font-mono">{{ $event->description }}</p>
 
-                         {{-- Like button --}}
-                         @if(auth()->user()->can('event.register'))
-                             <div class="mb-4">
-                                 @if($event->isLikedBy(auth()->user()))
-                                     <form action="{{ route('events.unlike', $event) }}" method="POST" class="inline">
-                                         @csrf
-                                         @method('DELETE')
-                                         <button type="submit" class="flex items-center gap-2 text-red-500 hover:text-red-600 transition">
-                                             <svg class="w-6 h-6 fill-current" viewBox="0 0 20 20">
-                                                 <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
-                                             </svg>
-                                             <span class="font-semibold">{{ $event->likesCount }} {{ $event->likesCount === 1 ? 'Like' : 'Likes' }}</span>
-                                         </button>
-                                     </form>
-                                 @else
-                                     <form action="{{ route('events.like', $event) }}" method="POST" class="inline">
-                                         @csrf
-                                         <button type="submit" class="flex items-center gap-2 text-gray-500 hover:text-red-500 transition">
-                                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                                             </svg>
-                                             <span class="font-semibold">{{ $event->likesCount }} {{ $event->likesCount === 1 ? 'Like' : 'Likes' }}</span>
-                                         </button>
-                                     </form>
-                                 @endif
-                             </div>
-                         @endif
+                         {{-- Action Buttons --}}
+                         <div class="flex flex-wrap gap-4 mb-6 pt-6 border-t border-[var(--neon-cyan)]/30">
+                            @if(auth()->user()->can('event.register'))
+                                @if($event->isLikedBy(auth()->user()))
+                                    <form action="{{ route('events.unlike', $event) }}" method="POST" class="inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-magenta)] bg-[var(--neon-magenta)] text-black font-bold text-sm uppercase tracking-widest hover:bg-opacity-80 transition-all duration-200">
+                                            <span>❤️ UNLIKE ({{ $event->likesCount }})</span>
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('events.like', $event) }}" method="POST" class="inline">
+                                        @csrf
+                                        <button type="submit" class="flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-200">
+                                            <span>🤍 LIKE ({{ $event->likesCount }})</span>
+                                        </button>
+                                    </form>
+                                @endif
+                            @endif
 
-                         <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                            <div>
-                                <span class="font-medium">📍 Location:</span> {{ $event->city }}, {{ $event->address }}
-                            </div>
-                            <div>
-                                <span class="font-medium">📅 Date:</span> {{ $event->starts_at->format('d M Y H:i') }}
-                            </div>
-                            <div>
-                                <span class="font-medium">⏱ Duration:</span> {{ $event->duration_hours }}h
-                            </div>
-                            <div>
-                                <span class="font-medium">👥 Volunteers:</span> {{ $event->participants()->count() }}/{{ $event->volunteer_quota }}
+                            @if(auth()->user()->can('event.generate-qr') && auth()->id() === $event->partner_id)
+                                <a href="{{ route('events.qr', $event) }}" class="flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-orange)] hover:text-black transition-all duration-200">
+                                    <span>📱 VIEW QR CODE</span>
+                                </a>
+                            @endif
+                        </div>
+
+                        {{-- Terminal Data Block --}}
+                        <div class="bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] p-6 font-mono">
+                            <div class="space-y-3">
+                                <div class="flex justify-between border-b border-[var(--neon-cyan)]/30 pb-2">
+                                    <span class="text-[var(--chrome-text)]/60">> LOCATION</span>
+                                    <span class="text-[var(--neon-cyan)]">{{ $event->city }}, {{ $event->address }}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-[var(--neon-cyan)]/30 pb-2">
+                                    <span class="text-[var(--chrome-text)]/60">> START_TIME</span>
+                                    <span class="text-[var(--neon-cyan)]">{{ $event->starts_at->format('d/m/Y H:i') }}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-[var(--neon-cyan)]/30 pb-2">
+                                    <span class="text-[var(--chrome-text)]/60">> DURATION</span>
+                                    <span class="text-[var(--neon-cyan)]">{{ $event->duration_hours }} HOURS</span>
+                                </div>
+                                <div class="flex justify-between border-b border-[var(--neon-cyan)]/30 pb-2">
+                                    <span class="text-[var(--chrome-text)]/60">> VOLUNTEER_SLOTS</span>
+                                    <span class="text-[var(--neon-cyan)]">{{ $event->participants()->count() }} / {{ $event->volunteer_quota }}</span>
+                                </div>
+                                <div class="flex justify-between border-b border-[var(--neon-cyan)]/30 pb-2">
+                                    <span class="text-[var(--chrome-text)]/60">> MISSION_ID</span>
+                                    <span class="text-[var(--neon-cyan)]">#{{ $event->id }}</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-[var(--chrome-text)]/60">> PARTNER_ID</span>
+                                    <span class="text-[var(--neon-cyan)]">#{{ $event->partner_id }}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {{-- Comments section placeholder --}}
+                    {{-- Comments section --}}
                     @if($event->comments->count() > 0)
-                        <div class="bg-white shadow-sm rounded-lg p-6">
-                            <h3 class="font-semibold mb-4">Comments</h3>
+                        <div class="glass-panel border-2 border-[var(--neon-cyan)] p-6">
+                            <h3 class="text-xl font-heading font-bold text-[var(--neon-cyan)] mb-6 uppercase tracking-wider">COMMENTS</h3>
                             @foreach($event->comments as $comment)
-                                <div class="border-b py-3">
-                                    <p class="text-sm">{{ $comment->body }}</p>
-                                    <span class="text-xs text-gray-500">{{ $comment->user->name }} - {{ $comment->created_at->diffForHumans() }}</span>
+                                <div class="border-b border-[var(--neon-cyan)]/20 py-4 last:border-b-0">
+                                    <p class="text-[var(--chrome-text)] text-sm mb-2">{{ $comment->body }}</p>
+                                    <div class="flex items-center gap-2 text-xs font-mono text-[var(--chrome-text)]/60">
+                                        <span class="text-[var(--neon-magenta)]">{{ $comment->user->name }}</span>
+                                        <span>•</span>
+                                        <span>{{ $comment->created_at->diffForHumans() }}</span>
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -98,31 +123,38 @@
                 <div class="space-y-6">
                     {{-- Partner QR (only for event owner) --}}
                     @if(auth()->user()->can('event.generate-qr') && auth()->id() === $event->partner_id)
-                        <div class="bg-white shadow-sm rounded-lg p-6 text-center">
-                            <h3 class="font-semibold mb-4">Check-in QR Code</h3>
-                            <img src="{{ route('events.qr', $event) }}" alt="QR Code" class="mx-auto mb-4">
-                            <p class="text-xs text-gray-500 mb-4">Scan to validate student presence</p>
+                        <div class="glass-panel border-2 border-[var(--neon-orange)] p-8 text-center relative">
+                            <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-orange)]"></div>
+                            <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-orange)]"></div>
+                            <h3 class="text-xl font-heading font-bold text-[var(--neon-orange)] mb-6 uppercase tracking-wider">CHECK-IN TERMINAL</h3>
+                            <div class="bg-white p-6 inline-block rounded-lg mb-4 shadow-[var(--glow-orange)]">
+                                <img src="{{ route('events.qr', $event) }}" alt="QR Code" class="w-48 h-48">
+                            </div>
+                            <p class="text-sm font-mono text-[var(--chrome-text)]/60 mb-6">SCAN TO VALIDATE STUDENT PRESENCE</p>
 
                             {{-- Check-in form --}}
-                            <form action="{{ route('events.checkin', $event) }}" method="POST" class="space-y-3">
+                            <form action="{{ route('events.checkin', $event) }}" method="POST" class="space-y-4">
                                 @csrf
-                                <input type="text" name="qr_token" placeholder="Enter QR token from scanner" 
-                                       class="w-full px-3 py-2 border rounded-md text-sm" required>
-                                <select name="student_id" class="w-full px-3 py-2 border rounded-md text-sm" required>
-                                    <option value="">Select Student</option>
+                                <input type="text" name="qr_token" placeholder="[ENTER QR TOKEN]" 
+                                       class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all"
+                                       required>
+                                <select name="student_id" class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all" required>
+                                    <option value="">[ SELECT STUDENT ]</option>
                                     @foreach($event->participants()->wherePivot('status', 'registered')->get() as $participant)
-                                        <option value="{{ $participant->id }}">{{ $participant->name }}</option>
+                                        <option value="{{ $participant->id }}">{{ strtoupper($participant->name) }} ({{ $participant->grade }})</option>
                                     @endforeach
                                 </select>
-                                <button type="submit" class="w-full px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">
-                                    Confirm Check-in
+                                <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-sm uppercase tracking-widest hover:shadow-[var(--glow-cyan)] transition-all duration-200">
+                                    <span>CONFIRM CHECK-IN</span>
                                 </button>
                             </form>
                         </div>
                     @endif
 
                     {{-- Registration / Status --}}
-                    <div class="bg-white shadow-sm rounded-lg p-6">
+                    <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-[var(--neon-cyan)]"></div>
+                        <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-[var(--neon-cyan)]"></div>
                         @php
                             $isRegistered = $event->participants()->where('user_id', auth()->id())->exists();
                             $pivot = $isRegistered ? $event->participants()->where('user_id', auth()->id())->first()->pivot : null;
@@ -131,109 +163,79 @@
                         @if($isRegistered)
                             <div class="text-center">
                                 @if($pivot->checked_in_at)
-                                    <div class="bg-green-100 text-green-800 p-4 rounded-lg mb-4">
-                                        ✅ Checked in — {{ $pivot->points_earned }} pts earned
+                                    <div class="border-2 border-green-500 bg-[rgba(34,197,94,0.1)] p-6 mb-6">
+                                        <p class="text-2xl font-heading text-green-400 drop-shadow-[0_0_10px_#22c55e] mb-2">✅ ACCESS GRANTED</p>
+                                        <p class="text-sm font-mono text-[var(--neon-cyan)]">{{ $pivot->points_earned }} POINTS CREDITED</p>
                                     </div>
                                 @else
-                                    <div class="bg-yellow-100 text-yellow-800 p-4 rounded-lg mb-4">
-                                        📋 Registered — Show up and get scanned!
+                                    <div class="border-2 border-[var(--neon-orange)] bg-[rgba(255,153,0,0.1)] p-6 mb-6">
+                                        <p class="text-2xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900] mb-2">📋 AWAITING CHECK-IN</p>
+                                        <p class="text-sm font-mono text-[var(--chrome-text)]">PRESENT AT VENUE AND SCAN QR</p>
                                     </div>
                                 @endif
                                 <form action="{{ route('events.unregister', $event) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 text-sm hover:underline">Cancel registration</button>
+                                    <button type="submit" class="px-6 py-3 border-2 border-red-500 text-red-500 font-mono uppercase tracking-widest hover:bg-red-500 hover:text-black transition-all duration-200">
+                                        🚫 CANCEL REGISTRATION
+                                    </button>
                                 </form>
                             </div>
                         @elseif(!$event->isFull() && auth()->user()->can('event.register'))
                             <form action="{{ route('events.register', $event) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700">
-                                    Register for Event
+                                <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-lg uppercase tracking-widest shadow-[var(--glow-cyan)] hover:shadow-[0_0_30px_#00FFFF]">
+                                    <span>🔒 JOIN MISSION</span>
                                 </button>
                             </form>
                         @elseif($event->isFull())
-                            <div class="text-center text-gray-500">Event is full</div>
+                            <div class="text-center py-8">
+                                <p class="text-xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900]">MISSION CAPACITY REACHED</p>
+                                <p class="text-sm font-mono text-[var(--chrome-text)]/60 mt-2">ALL SLOTS FILLED</p>
+                            </div>
                         @endif
                     </div>
 
-                    {{-- Participants Preview with Modal --}}
-                    <div class="bg-white shadow-sm rounded-lg p-6">
-                        <div class="flex items-center justify-between mb-4">
-                            <h3 class="font-semibold">
-                                Participants ({{ $event->participants->count() }})
-                            </h3>
-                        </div>
-
-                        {{-- First 5 avatars inline --}}
-                        <div class="flex items-center -space-x-2 overflow-hidden py-2">
-                            @foreach($event->participants->take(5) as $participant)
-                                <div class="h-10 w-10 rounded-full bg-[#FFDCDC] ring-2 ring-white flex items-center justify-center text-xs font-bold text-[#D4A574]" title="{{ $participant->name }}">
-                                    {{ strtoupper($participant->name[0]) }}
-                                </div>
-                            @endforeach
-                            @if($event->participants->count() > 5)
-                                <div class="h-10 w-10 rounded-full bg-gray-200 ring-2 ring-white flex items-center justify-center text-xs text-gray-600 cursor-pointer hover:bg-gray-300"
-                                     x-data="{ open: false }"
-                                     @click="open = true">
-                                    +{{ $event->participants->count() - 5 }}
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Full participants modal --}}
+                    {{-- Participants Preview --}}
+                    <div class="glass-panel border-2 border-[var(--neon-magenta)] p-6 relative">
+                        <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-[var(--neon-cyan)]"></div>
+                        <h3 class="text-xl font-heading font-bold text-[var(--neon-magenta)] mb-4 uppercase tracking-wider drop-shadow-[0_0_5px_#FF00FF]">OPERATORS ({{ $event->participants->count() }})</h3>
+                        
                         @if($event->participants->count() > 0)
-                            <div x-show="open" x-transition class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
-                                <div class="bg-white rounded-lg p-6 max-w-2xl w-full mx-4 max-h-96 overflow-y-auto">
-                                    <div class="flex justify-between items-center mb-4">
-                                        <h4 class="text-lg font-semibold">Tous les participants</h4>
-                                        <button @click="open = false" class="text-gray-500 hover:text-gray-700 text-2xl leading-none">&times;</button>
-                                    </div>
-                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                        @foreach($event->participants as $participant)
-                                            <div class="flex items-center gap-3 p-2 rounded-lg bg-[#FFF2EB]">
-                                                <div class="w-10 h-10 bg-[#FFDCDC] rounded-full flex items-center justify-center flex-shrink-0">
-                                                    <span class="text-sm font-bold text-[#D4A574]">
-                                                        {{ strtoupper($participant->name[0]) }}
-                                                    </span>
-                                                </div>
-                                                <div class="flex-1 min-w-0">
-                                                    <p class="text-sm font-medium text-gray-900 truncate">{{ $participant->name }}</p>
-                                                    <p class="text-xs text-gray-500 capitalize">{{ $participant->grade }}</p>
-                                                </div>
-                                                @if($participant->id !== auth()->id())
-                                                    <form action="{{ route('messages.start') }}" method="post" class="inline">
-                                                        @csrf
-                                                        <input type="hidden" name="user_id" value="{{ $participant->id }}">
-                                                        <button type="submit" class="text-xs px-2 py-1 bg-[#D4A574] text-white rounded hover:bg-[#c49463]">
-                                                            Message
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
-                    {{-- Likes Social Proof --}}
-                    @if($event->likesCount > 0)
-                        <div class="bg-white shadow-sm rounded-lg p-6 mt-6">
-                            <h3 class="font-semibold mb-3">
-                                ❤️ {{ $event->likesCount }} {{ $event->likesCount === 1 ? 'person' : 'personnes' }} aiment cet événement
-                            </h3>
-
-                            <div class="flex items-center -space-x-2 overflow-hidden">
-                                @foreach($event->likedBy->take(5) as $liker)
-                                    <div class="h-10 w-10 rounded-full bg-red-100 ring-2 ring-white flex items-center justify-center text-xs font-bold text-red-600" title="{{ $liker->name }}">
-                                        {{ strtoupper($liker->name[0]) }}
+                            <div class="flex flex-wrap gap-3">
+                                @foreach($event->participants->take(8) as $participant)
+                                    <div class="flex items-center gap-2 px-3 py-2 bg-[rgba(255,0,255,0.1)] border border-[var(--neon-magenta)]/30">
+                                        <div class="w-8 h-8 rounded-full bg-[var(--neon-magenta)] flex items-center justify-center">
+                                            <span class="text-sm font-bold text-black">{{ strtoupper($participant->name[0]) }}</span>
+                                        </div>
+                                        <div class="text-xs font-mono">
+                                            <p class="text-[var(--chrome-text)]">{{ strtoupper($participant->name) }}</p>
+                                            <p class="text-[var(--neon-cyan)]/60">{{ strtoupper($participant->grade) }}</p>
+                                        </div>
                                     </div>
                                 @endforeach
-                                @if($event->likesCount > 5)
-                                    <div class="h-10 w-10 rounded-full bg-gray-100 ring-2 ring-white flex items-center justify-center text-xs text-gray-600">
-                                        +{{ $event->likesCount - 5 }}
-                                    </div>
-                                @endif
+                            </div>
+                        @else
+                            <p class="text-sm font-mono text-[var(--chrome-text)]/60">NO OPERATORS REGISTERED</p>
+                        @endif
+                    </div>
+
+                    {{-- Likes Social Proof --}}
+                    @if($event->likesCount > 0)
+                        <div class="glass-panel border-2 border-[var(--neon-cyan)] p-6">
+                            <h3 class="text-xl font-heading font-bold text-[var(--neon-cyan)] mb-4 uppercase tracking-wider">LIKES</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-3xl text-[var(--neon-magenta)] animate-pulse">❤️</span>
+                                    <span class="text-2xl font-heading text-[var(--neon-magenta)]">{{ $event->likesCount }}</span>
+                                </div>
+                                <div class="flex -space-x-2">
+                                    @foreach($event->likedBy->take(5) as $liker)
+                                        <div class="w-10 h-10 rounded-full border-2 border-[var(--neon-magenta)] bg-[rgba(255,0,255,0.2)] flex items-center justify-center text-xs font-bold text-[var(--neon-magenta)]" title="{{ $liker->name }}">
+                                            {{ strtoupper($liker->name[0]) }}
+                                        </div>
+                                    @endforeach
+                                </div>
                             </div>
                         </div>
                     @endif

@@ -1,80 +1,119 @@
-{{-- @deprecated: Use Livewire or React for v2.0 --}}
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Volunteering Mission') }}
+        <h2 class="text-2xl md:text-3xl font-heading font-black text-[var(--neon-cyan)] uppercase tracking-wider drop-shadow-[0_0_15px_rgba(0,255,255,0.8)]">
+            <span class="text-glow-cyan">EDIT MISSION</span>
         </h2>
     </x-slot>
 
-    <div class="py-12">
+    <div class="py-12 relative z-10">
         <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-sm rounded-lg p-6">
-                <form action="{{ route('events.update', $event) }}" method="POST" class="space-y-6">
+            <div class="glass-panel border-2 border-[var(--neon-magenta)] p-8 relative">
+                <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-cyan)]"></div>
+                <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-cyan)]"></div>
+
+                <form action="{{ route('events.update', $event) }}" method="POST" class="space-y-8">
                     @csrf
                     @method('PUT')
 
+                    {{-- Title --}}
                     <div>
-                        <x-input-label for="title" :value="__('Title')" />
-                        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $event->title)" required />
-                        <x-input-error class="mt-2" :messages="$errors->get('title')" />
+                        <label for="title" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> MISSION_TITLE</label>
+                        <input type="text" name="title" id="title" value="{{ old('title', $event->title) }}"
+                               class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:shadow-[var(--glow-magenta)] transition-all duration-300"
+                               placeholder="Mission title..." required>
+                        @error('title')
+                            <p class="text-sm text-[var(--neon-orange)] mt-2 font-mono">{{ $message }}</p>
+                        @enderror
                     </div>
 
+                    {{-- Description --}}
                     <div>
-                        <x-input-label for="description" :value="__('Description')" />
-                        <textarea id="description" name="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>{{ old('description', $event->description) }}</textarea>
-                        <x-input-error class="mt-2" :messages="$errors->get('description')" />
+                        <label for="description" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> MISSION_BRIEF</label>
+                        <textarea id="description" name="description" rows="6" 
+                                  class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-magenta)] transition-all duration-300 resize-none"
+                                  placeholder="Describe the mission..." required>{{ old('description', $event->description) }}</textarea>
+                        @error('description')
+                            <p class="text-sm text-[var(--neon-orange)] mt-2 font-mono">{{ $message }}</p>
+                        @enderror
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    {{-- Category & City --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <x-input-label for="category" :value="__('Category')" />
-                            <x-text-input id="category" name="category" type="text" class="mt-1 block w-full" :value="old('category', $event->category)" />
+                            <label for="category" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> CATEGORY</label>
+                            <input type="text" name="category" id="category" value="{{ old('category', $event->category) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono placeholder-[var(--neon-cyan)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300">
                         </div>
                         <div>
-                            <x-input-label for="city" :value="__('City')" />
-                            <x-text-input id="city" name="city" type="text" class="mt-1 block w-full" :value="old('city', $event->city)" required />
+                            <label for="city" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> LOCATION_CITY</label>
+                            <input type="text" name="city" id="city" value="{{ old('city', $event->city) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono placeholder-[var(--neon-cyan)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300"
+                                   required>
                         </div>
                     </div>
 
+                    {{-- Address --}}
                     <div>
-                        <x-input-label for="address" :value="__('Address')" />
-                        <x-text-input id="address" name="address" type="text" class="mt-1 block w-full" :value="old('address', $event->address)" required />
+                        <label for="address" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> LOCATION_ADDRESS</label>
+                        <input type="text" name="address" id="address" value="{{ old('address', $event->address) }}"
+                               class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono placeholder-[var(--neon-cyan)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300"
+                               required>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    {{-- Date & Time --}}
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <x-input-label for="starts_at" :value="__('Start Date & Time')" />
-                            <x-text-input id="starts_at" name="starts_at" type="datetime-local" class="mt-1 block w-full" :value="old('starts_at', $event->starts_at->format('Y-m-d\TH:i'))" required />
+                            <label for="starts_at" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> START_TIMESTAMP</label>
+                            <input type="datetime-local" name="starts_at" id="starts_at" value="{{ old('starts_at', $event->starts_at->format('Y-m-d\TH:i')) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300"
+                                   required>
                         </div>
                         <div>
-                            <x-input-label for="ends_at" :value="__('End Date & Time')" />
-                            <x-text-input id="ends_at" name="ends_at" type="datetime-local" class="mt-1 block w-full" :value="old('ends_at', $event->ends_at->format('Y-m-d\TH:i'))" required />
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <x-input-label for="volunteer_quota" :value="__('Volunteer Quota')" />
-                            <x-text-input id="volunteer_quota" name="volunteer_quota" type="number" min="1" class="mt-1 block w-full" :value="old('volunteer_quota', $event->volunteer_quota)" required />
-                        </div>
-                        <div>
-                            <x-input-label for="duration_hours" :value="__('Duration (hours)')" />
-                            <x-text-input id="duration_hours" name="duration_hours" type="number" min="1" class="mt-1 block w-full" :value="old('duration_hours', $event->duration_hours)" required />
-                        </div>
-                        <div>
-                            <x-input-label for="points_reward" :value="__('Points Reward')" />
-                            <x-text-input id="points_reward" name="points_reward" type="number" min="1" class="mt-1 block w-full" :value="old('points_reward', $event->points_reward)" required />
+                            <label for="ends_at" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> END_TIMESTAMP</label>
+                            <input type="datetime-local" name="ends_at" id="ends_at" value="{{ old('ends_at', $event->ends_at->format('Y-m-d\TH:i')) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300"
+                                   required>
                         </div>
                     </div>
 
+                    {{-- Numbers --}}
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="volunteer_quota" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> VOLUNTEER_CAPACITY</label>
+                            <input type="number" name="volunteer_quota" id="volunteer_quota" min="1" value="{{ old('volunteer_quota', $event->volunteer_quota) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-mono focus:outline-none focus:shadow-[var(--glow-orange)] transition-all duration-300"
+                                   required>
+                        </div>
+                        <div>
+                            <label for="duration_hours" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> DURATION_HOURS</label>
+                            <input type="number" name="duration_hours" id="duration_hours" min="1" value="{{ old('duration_hours', $event->duration_hours) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-mono focus:outline-none focus:shadow-[var(--glow-orange)] transition-all duration-300"
+                                   required>
+                        </div>
+                        <div>
+                            <label for="points_reward" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> POINTS_REWARD</label>
+                            <input type="number" name="points_reward" id="points_reward" min="1" value="{{ old('points_reward', $event->points_reward) }}"
+                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-orange)] text-[var(--neon-orange)] font-mono focus:outline-none focus:shadow-[var(--glow-orange)] transition-all duration-300"
+                                   required>
+                        </div>
+                    </div>
+
+                    {{-- Urgency Multiplier --}}
                     <div>
-                        <x-input-label for="urgency_multiplier" :value="__('Urgency Multiplier (1-3)')" />
-                        <x-text-input id="urgency_multiplier" name="urgency_multiplier" type="number" step="0.1" min="1" max="3" class="mt-1 block w-full" :value="old('urgency_multiplier', $event->urgency_multiplier)" />
+                        <label for="urgency_multiplier" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> URGENCY_MULTIPLIER</label>
+                        <input type="number" step="0.1" min="1" max="3" name="urgency_multiplier" id="urgency_multiplier" value="{{ old('urgency_multiplier', $event->urgency_multiplier) }}"
+                               class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300">
+                        <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-2">VALID RANGE: 1.0 (NORMAL) → 3.0 (CRITICAL)</p>
                     </div>
 
-                    <div class="flex justify-between">
-                        <a href="{{ route('events.show', $event) }}" class="px-4 py-2 text-gray-700 border rounded-md hover:bg-gray-50">Cancel</a>
-                        <x-primary-button>{{ __('Update Mission') }}</x-primary-button>
+                    {{-- Submit --}}
+                    <div class="flex gap-4 pt-6 border-t-2 border-[var(--neon-magenta)]/30">
+                        <a href="{{ route('events.show', $event) }}" class="btn-skew px-8 py-4 border-2 border-[var(--chrome-text)]/30 text-[var(--chrome-text)] font-bold text-sm uppercase tracking-widest hover:border-[var(--neon-magenta)] hover:text-[var(--neon-magenta)] transition-all duration-200">
+                            <span>✕ CANCEL</span>
+                        </a>
+                        <button type="submit" class="btn-skew flex-1 px-8 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-lg uppercase tracking-widest shadow-[var(--glow-cyan)] hover:shadow-[0_0_30px_#00FFFF] transition-all duration-200">
+                            <span>⚡ UPDATE MISSION</span>
+                        </button>
                     </div>
                 </form>
             </div>
