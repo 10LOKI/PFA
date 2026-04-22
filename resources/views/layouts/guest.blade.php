@@ -14,15 +14,21 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
-            <div>
-                <a href="/">
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+    <body class="font-mono text-[var(--chrome-text)] antialiased bg-[var(--void-bg)]">
+        <!-- Perspective Grid Floor -->
+        <div class="perspective-grid"></div>
+        <div class="sun-glow"></div>
+
+        <div class="min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 relative z-10">
+            <!-- Logo -->
+            <div class="mb-8">
+                <a href="/" class="inline-block">
+                    <x-application-logo class="w-24 h-24 fill-current text-[var(--neon-cyan)] drop-shadow-[0_0_15px_rgba(0,255,255,0.8)]" />
                 </a>
             </div>
 
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
+            <!-- Glass Panel Card -->
+            <div class="w-full sm:max-w-md glass-panel rounded-lg p-8 border border-[var(--neon-cyan)] shadow-[0_0_20px_rgba(0,255,255,0.3)]">
                 {{ $slot }}
             </div>
         </div>

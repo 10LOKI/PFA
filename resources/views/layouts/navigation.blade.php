@@ -18,6 +18,7 @@
                         ];
                         if(auth()->user()->role === 'student') {
                             $navItems['events.index'] = ['label' => 'EVENTS', 'icon' => '📅'];
+                            $navItems['likes.index'] = ['label' => 'LIKED', 'icon' => '❤️'];
                             $navItems['rewards.index'] = ['label' => 'REWARDS', 'icon' => '🎁'];
                         }
                         if(auth()->user()->role === 'partner') {
@@ -101,14 +102,17 @@
                 📊 DASHBOARD
             </a>
 
-             @if(auth()->user()->role === 'student')
-                 <a href="{{ route('events.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">
-                     📅 EVENTS
-                 </a>
-                 <a href="{{ route('rewards.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">
-                     🎁 REWARDS
-                 </a>
-             @endif
+              @if(auth()->user()->role === 'student')
+                  <a href="{{ route('events.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">
+                      📅 EVENTS
+                  </a>
+                  <a href="{{ route('likes.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">
+                      ❤️ LIKED EVENTS
+                  </a>
+                  <a href="{{ route('rewards.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">
+                      🎁 REWARDS
+                  </a>
+              @endif
 
              @if(auth()->user()->role === 'partner')
                  <a href="{{ route('events.index') }}" class="block px-4 py-3 text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)] hover:text-[var(--neon-magenta)] hover:bg-[rgba(255,0,255,0.1)] hover:border-l-4 hover:border-l-[var(--neon-magenta)] transition-all duration-200">

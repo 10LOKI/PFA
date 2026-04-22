@@ -132,6 +132,11 @@ class User extends Authenticatable
         return $this->hasMany(Feedback::class);
     }
 
+    public function likedEvents(): MorphToMany
+    {
+        return $this->morphedByMany(Event::class, 'likeable', 'likes', 'user_id', 'likeable_id');
+    }
+
     // Override Notifiable trait - use our custom notifications table
     public function notifications($class = null)
     {

@@ -76,7 +76,7 @@ class Event extends Model
 
     public function likedBy(): MorphToMany
     {
-        return $this->morphedByMany(User::class, 'likeable', 'likes');
+        return $this->morphToMany(User::class, 'likeable', 'likes', 'likeable_id', 'user_id');
     }
 
     public function getLikesCountAttribute(): int

@@ -11,7 +11,9 @@ use App\Http\Controllers\MessageController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
+use App\Http\Controllers\StudentCheckInController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WalletController;
 use App\Http\Controllers\WishlistController;
 use App\Models\Event;
 use App\Models\User;
@@ -60,6 +62,7 @@ Route::middleware('auth')->group(function () {
     // Likes
     Route::post('events/{event}/like', [LikeController::class, 'store'])->name('events.like');
     Route::delete('events/{event}/like', [LikeController::class, 'destroy'])->name('events.unlike');
+    Route::get('likes', [LikeController::class, 'index'])->name('likes.index');
 
     // QR Check-in (partner) - new token-based
     Route::match(['get', 'post'], '/checkin/{token}', [StudentCheckInController::class, '__invoke'])->name('checkin.scan');
