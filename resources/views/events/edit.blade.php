@@ -43,11 +43,14 @@
                             <label for="category" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> CATEGORY</label>
                             <select name="category" id="category" class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300">
                                 <option value="">Select a category...</option>
-                                <option value="Environment" {{ $event->category === 'Environment' ? 'selected' : '' }}>Environment</option>
-                                <option value="Education" {{ $event->category === 'Education' ? 'selected' : '' }}>Education</option>
-                                <option value="Health" {{ $event->category === 'Health' ? 'selected' : '' }}>Health</option>
-                                <option value="Technology" {{ $event->category === 'Technology' ? 'selected' : '' }}>Technology</option>
-                                <option value="Community" {{ $event->category === 'Community' ? 'selected' : '' }}>Community</option>
+                                <option value="Environnement" {{ $event->category === 'Environnement' ? 'selected' : '' }}>Environnement</option>
+                                <option value="Éducation" {{ $event->category === 'Éducation' ? 'selected' : '' }}>Éducation</option>
+                                <option value="Santé" {{ $event->category === 'Santé' ? 'selected' : '' }}>Santé</option>
+                                <option value="Social" {{ $event->category === 'Social' ? 'selected' : '' }}>Social</option>
+                                <option value="Culture" {{ $event->category === 'Culture' ? 'selected' : '' }}>Culture</option>
+                                <option value="Sport" {{ $event->category === 'Sport' ? 'selected' : '' }}>Sport</option>
+                                <option value="Technologie" {{ $event->category === 'Technologie' ? 'selected' : '' }}>Technologie</option>
+                                <option value="Autre" {{ $event->category === 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
                         </div>
                         <div>

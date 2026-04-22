@@ -42,11 +42,14 @@
                             <label for="category" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-cyan)] mb-2">> CATEGORY</label>
                             <select name="category" id="category" class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-magenta)] transition-all duration-300">
                                 <option value="">Select a category...</option>
-                                <option value="Environment" {{ old('category') === 'Environment' ? 'selected' : '' }}>Environment</option>
-                                <option value="Education" {{ old('category') === 'Education' ? 'selected' : '' }}>Education</option>
-                                <option value="Health" {{ old('category') === 'Health' ? 'selected' : '' }}>Health</option>
-                                <option value="Technology" {{ old('category') === 'Technology' ? 'selected' : '' }}>Technology</option>
-                                <option value="Community" {{ old('category') === 'Community' ? 'selected' : '' }}>Community</option>
+                                <option value="Environnement" {{ old('category') === 'Environnement' ? 'selected' : '' }}>Environnement</option>
+                                <option value="Éducation" {{ old('category') === 'Éducation' ? 'selected' : '' }}>Éducation</option>
+                                <option value="Santé" {{ old('category') === 'Santé' ? 'selected' : '' }}>Santé</option>
+                                <option value="Social" {{ old('category') === 'Social' ? 'selected' : '' }}>Social</option>
+                                <option value="Culture" {{ old('category') === 'Culture' ? 'selected' : '' }}>Culture</option>
+                                <option value="Sport" {{ old('category') === 'Sport' ? 'selected' : '' }}>Sport</option>
+                                <option value="Technologie" {{ old('category') === 'Technologie' ? 'selected' : '' }}>Technologie</option>
+                                <option value="Autre" {{ old('category') === 'Autre' ? 'selected' : '' }}>Autre</option>
                             </select>
                         </div>
                         <div>

@@ -13,14 +13,34 @@ class EventController extends Controller
 {
     public function index(Request $request): View
     {
+        $query = Event::query();
+
         // Admins see all events, others only approved
-        if (auth()->user()->isAdmin()) {
-            $events = Event::latest('starts_at')->paginate(12);
-        } else {
-            $events = Event::where('status', 'approved')
-                ->latest('starts_at')
-                ->paginate(12);
+        if (! auth()->user()->isAdmin()) {
+            $query->where('status', 'approved');
         }
+
+        // Search filter (title or description)
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%');
+            });
+        }
+
+        // City filter
+        if ($request->filled('city')) {
+            $query->where('city', 'like', '%'.$request->input('city').'%');
+        }
+
+        // Category filter (interests checkboxes)
+        if ($request->filled('interests') && is_array($request->input('interests'))) {
+            $categories = $request->input('interests');
+            $query->whereIn('category', $categories);
+        }
+
+        $events = $query->latest('starts_at')->paginate(12)->withQueryString();
 
         $categories = ['Environnement', 'Éducation', 'Santé', 'Social', 'Culture', 'Sport', 'Technologie', 'Autre'];
 

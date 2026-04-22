@@ -191,8 +191,52 @@
 
                                 return false;
                             }
-                            </script>
-                        @endif
+                             </script>
+                         @endif
+
+                         <script>
+                         async function submitCheckOut(event) {
+                             event.preventDefault();
+                             const form = event.target;
+                             const feedback = document.getElementById('checkout-feedback');
+                             const studentId = form.querySelector('input[name="student_id"]').value;
+                             
+                             if (!studentId) {
+                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Student ID required</p>';
+                                 return false;
+                             }
+
+                             feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-out...</p>';
+
+                             try {
+                                 const response = await fetch('{{ route("events.checkout", $event) }}', {
+                                     method: 'POST',
+                                     headers: {
+                                         'Content-Type': 'application/json',
+                                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                     },
+                                     body: JSON.stringify({ student_id: studentId }),
+                                 });
+
+                                 const data = await response.json();
+
+                                 if (response.ok && data.success) {
+                                     feedback.innerHTML = `
+                                         <p class="text-green-400">✓ SUCCESS: ${data.message}</p>
+                                         <p class="text-[var(--chrome-text)]">${data.points_earned} POINTS CREDITED | TOTAL HOURS: ${data.total_hours}</p>
+                                     `;
+                                     form.reset();
+                                     setTimeout(() => location.reload(), 3000);
+                                 } else {
+                                     feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
+                                 }
+                             } catch (error) {
+                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
+                             }
+
+                             return false;
+                         }
+                         </script>
 
                     {{-- Registration / Status --}}
                     <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
