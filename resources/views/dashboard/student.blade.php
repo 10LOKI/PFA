@@ -149,6 +149,62 @@
                         <p class="text-sm font-mono text-[var(--chrome-text)]/60 text-center py-8">NO RECENT ACTIVITY DETECTED</p>
                     @endif
                 </div>
+
+                @php
+                    $recentRegistrations = auth()->user()->events()->latest()->take(5)->get();
+                @endphp
+
+                @if($recentRegistrations->count() > 0)
+                    <div class="space-y-4">
+                        @foreach($recentRegistrations as $event)
+                            <div class="flex items-center justify-between p-4 bg-[rgba(26,16,60,0.4)] border border-[var(--border-default)] hover:border-[var(--neon-cyan)] transition-all duration-300 group">
+                                <div class="flex items-center gap-4">
+                                    <div class="w-12 h-12 bg-[rgba(0,255,255,0.1)] border border-[var(--neon-cyan)] flex items-center justify-center">
+                                        @if($event->image)
+                                            <img src="{{ asset('storage/' . $event->image) }}" class="w-full h-full object-cover" alt="{{ $event->title }}">
+                                        @else
+                                            <span class="text-xl">📅</span>
+                                        @endif
+                                    </div>
+                                    <div>
+                                        <h4 class="font-heading font-bold text-[var(--chrome-text)] group-hover:text-[var(--neon-cyan)] transition-colors">
+                                            {{ $event->title }}
+                                        </h4>
+                                        <p class="text-xs font-mono text-[var(--chrome-text)]/60">
+                                            {{ $event->city }} • {{ $event->starts_at->format('d M Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                                @php
+                                    $status = $event->pivot->checked_in_at ? 'checked-in' : 'registered';
+                                    $statusClass = match($status) {
+                                        'checked-in' => 'border-green-400 text-green-400',
+                                        'registered' => 'border-[var(--neon-cyan)] text-[var(--neon-cyan)]',
+                                        default => 'border-gray-500 text-gray-500'
+                                    };
+                                    $statusLabel = $status === 'checked-in' ? 'CHECKED-IN' : 'REGISTERED';
+                                @endphp
+                                <div class="flex items-center gap-3">
+                                    <span class="px-3 py-1 border-2 {{ $statusClass }} font-mono text-xs uppercase tracking-widest">
+                                        {{ $statusLabel }}
+                                    </span>
+                                    <a href="{{ route('events.show', $event) }}" class="text-sm text-[var(--neon-cyan)] hover:text-[var(--neon-magenta)] transition-colors font-mono uppercase tracking-wider">
+                                        VIEW →
+                                    </a>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <div class="text-center py-12">
+                        <p class="text-4xl mb-4">📭</p>
+                        <p class="text-xl font-heading text-[var(--neon-magenta)] mb-2">NO MISSION HISTORY</p>
+                        <p class="text-sm font-mono text-[var(--chrome-text)]/60">Start by registering for an event.</p>
+                        <a href="{{ route('events.index') }}" class="inline-block mt-4 btn-skew px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] font-bold text-xs uppercase tracking-widest hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-200">
+                            <span>BROWSE MISSIONS</span>
+                        </a>
+                    </div>
+                @endif
             </div>
 
         </div>
