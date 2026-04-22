@@ -196,6 +196,20 @@
 - [x] AuthenticationTest: redirect to role-based dashboard
 - [x] Tests: 24 passed, 1 skipped (registration redirect)
 
+## Milestone 20: Partner Code Fixes & Capabilities
+- [x] Renamed 'parteners' table to 'partners' via migration and executed the migration to create the partners table
+- [x] Updated Partner model $table to 'partners'
+- [x] Added auto-approval for KYC-approved partners in EventController
+- [x] Enhanced partner dashboard with capabilities section, reward actions, and active events for QR scanning
+- [x] Verified partner permissions: event.browse/create/update/delete/generate-qr, checkin.validate, student.rate, reward.create/update/delete
+
+## Milestone 21: Industrial Skeuomorphism Design System Integration
+- [x] Added Industrial Skeuomorphism design tokens to app.css (neumorphic shadows, mechanical colors, fonts Inter/JetBrains Mono)
+- [x] Redesigned student dashboard: Neumorphic cards with corner screws, tactile buttons, LED status, mechanical typography
+- [x] Redesigned partner dashboard: Dual LEDs for KYC status, bolted modules, disabled controls for unverified partners
+- [x] Redesigned admin dashboard: System status indicators, neumorphic stats grid, industrial table styling
+- [x] Applied signature elements: Corner screws, vent slots, noise texture, mechanical shadows, tactile interactions
+
 ## Current Focus
 - UI: Landing Page + Navigation
 

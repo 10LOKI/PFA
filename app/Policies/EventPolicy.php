@@ -36,11 +36,8 @@ class EventPolicy
 
     public function approve(User $user, Event $event): bool
     {
-        return $user->can('event.approve') && $user->isAdmin();
+        return $user->isAdmin();
     }
 
-    public function generateQr(User $user, Event $event): bool
-    {
-        return $user->can('event.generate-qr') && $user->id === $event->partner_id;
-    }
+    // generateQr permission removed - QR now student-specific
 }

@@ -7,13 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasPermissions;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, HasPermissions, Notifiable;
+    use HasFactory, HasPermissions, HasRoles, Notifiable;
 
     protected $fillable = [
         'name',
@@ -29,6 +31,7 @@ class User extends Authenticatable
         'grade',
         'kyc_verified',
         'is_certified_partner',
+        'interests',
     ];
 
     protected $hidden = [
@@ -43,13 +46,14 @@ class User extends Authenticatable
             'password' => 'hashed',
             'kyc_verified' => 'boolean',
             'is_certified_partner' => 'boolean',
+            'interests' => 'array',
         ];
     }
 
     // --- Role helpers ---
     public function isAdmin(): bool
     {
-        return $this->role === 'admin';
+        return $this->role === 'admin' || $this->hasRole('admin');
     }
 
     public function isPartner(): bool
@@ -126,5 +130,23 @@ class User extends Authenticatable
     public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class);
+    }
+
+    public function likedEvents(): MorphToMany
+    {
+        return $this->morphedByMany(Event::class, 'likeable', 'likes', 'user_id', 'likeable_id');
+    }
+
+    // Override Notifiable trait - use our custom notifications table
+    public function notifications($class = null)
+    {
+        return $this->morphToMany(Notification::class, 'notifiable', 'notification_usages')
+            ->withPivot(['read_at', 'created_at', 'updated_at']);
+    }
+
+    // Use custom notifications table directly
+    public function customNotifications(): HasMany
+    {
+        return $this->hasMany(Notification::class, 'user_id');
     }
 }

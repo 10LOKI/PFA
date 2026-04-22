@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Conversation;
 use App\Models\Message;
 use Illuminate\Http\RedirectResponse;
@@ -14,7 +15,10 @@ class MessageController extends Controller
     {
         $conversations = auth()->user()
             ->conversations()
-            ->with(['participants', 'latestMessage'])
+            ->with('participants')
+            ->with(['messages' => function ($q) {
+                $q->latest()->limit(1);
+            }])
             ->latest('updated_at')
             ->get();
 
@@ -23,7 +27,7 @@ class MessageController extends Controller
 
     public function show(Conversation $conversation): View
     {
-        if (!$conversation->isParticipant(auth()->user())) {
+        if (! $conversation->isParticipant(auth()->user())) {
             abort(403);
         }
 
@@ -46,13 +50,13 @@ class MessageController extends Controller
             'body' => 'required|string|max:1000',
         ]);
 
-        $conversation = Conversation::whereHas('participants', function ($q) use ($request) {
+        $conversation = Conversation::whereHas('participants', function ($q) {
             $q->where('user_id', auth()->id());
         })->whereHas('participants', function ($q) use ($request) {
             $q->where('user_id', $request->recipient_id);
         })->first();
 
-        if (!$conversation) {
+        if (! $conversation) {
             $conversation = Conversation::create();
             $conversation->participants()->attach([auth()->id(), $request->recipient_id]);
         }
@@ -62,6 +66,8 @@ class MessageController extends Controller
             'sender_id' => auth()->id(),
             'body' => $request->body,
         ]);
+
+        event(new MessageSent($message));
 
         $conversation->touch();
 
@@ -74,13 +80,13 @@ class MessageController extends Controller
             'user_id' => 'required|exists:users,id|different:auth()->id',
         ]);
 
-        $conversation = Conversation::whereHas('participants', function ($q) use ($request) {
+        $conversation = Conversation::whereHas('participants', function ($q) {
             $q->where('user_id', auth()->id());
         })->whereHas('participants', function ($q) use ($request) {
             $q->where('user_id', $request->user_id);
         })->first();
 
-        if (!$conversation) {
+        if (! $conversation) {
             $conversation = Conversation::create();
             $conversation->participants()->attach([auth()->id(), $request->user_id]);
         }

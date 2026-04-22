@@ -106,7 +106,78 @@
                     <a href="{{ route('dashboard') }}" class="btn-skew px-8 py-4 border-2 border-[var(--neon-magenta)] text-[var(--neon-magenta)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-magenta)] hover:text-black transition-all duration-200">
                         <span>🔄 REFRESH</span>
                     </a>
+                    <a href="{{ route('rewards.create') }}" class="px-6 py-3 bg-[#FFDCDC] text-[#D4A574] border-2 border-[#FFDCDC] rounded-lg font-medium hover:bg-[#FFE8CD] transition">
+                        + Ajouter une récompense
+                    </a>
+                    <a href="{{ route('rewards.index') }}" class="px-6 py-3 bg-white text-[#D4A574] border-2 border-[#D4A574] rounded-lg font-medium hover:bg-[#FFE8CD] transition">
+                        Mes récompenses
+                    </a>
+                    <a href="{{ route('events.index') }}" class="px-6 py-3 bg-[#FFDCDC] text-[#D4A574] border-2 border-[#FFDCDC] rounded-lg font-medium hover:bg-[#FFE8CD] transition">
+                        Gérer événements
+                    </a>
                 </div>
+            </div>
+
+            {{-- Partner Capabilities --}}
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Vos capacités en tant que partenaire</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <h4 class="font-medium text-[#D4A574]">Gestion des événements</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>✓ Créer et publier des missions de bénévolat</li>
+                            <li>✓ Générer des QR codes pour le check-in</li>
+                            <li>✓ Valider la participation des étudiants</li>
+                            <li>✓ Noter et commenter les étudiants</li>
+                        </ul>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-medium text-[#D4A574]">Récompenses & Marketplace</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>✓ Ajouter des récompenses au marketplace</li>
+                            <li>✓ Définir les coûts en points</li>
+                            <li>✓ Gérer le stock et les conditions d'accès</li>
+                        </ul>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-medium text-[#D4A574]">Analyse & Impact</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>✓ Suivre les heures de bénévolat collectées</li>
+                            <li>✓ Analyser l'impact social de vos missions</li>
+                            <li>✓ Générer des rapports CSR</li>
+                        </ul>
+                    </div>
+                    <div class="space-y-2">
+                        <h4 class="font-medium text-[#D4A574]">Permissions spéciales</h4>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            <li>✓ Accès au dashboard partenaire</li>
+                            <li>✓ Approbation automatique (si certifié)</li>
+                            <li>✓ Notifications push pour nouvelles inscriptions</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Active Events for Check-in --}}
+            <div class="bg-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Événements actifs - Scanner QR</h3>
+                @if(auth()->user()->hostedEvents()->where('status', 'approved')->where('starts_at', '<=', now())->where('ends_at', '>=', now())->exists())
+                    <div class="space-y-4">
+                        @foreach(auth()->user()->hostedEvents()->where('status', 'approved')->where('starts_at', '<=', now())->where('ends_at', '>=', now())->get() as $event)
+                            <div class="flex items-center justify-between p-4 bg-[#FFF2EB] rounded-lg">
+                                <div>
+                                    <h4 class="font-medium text-gray-800">{{ $event->title }}</h4>
+                                    <p class="text-sm text-gray-600">{{ $event->participants()->count() }}/{{ $event->volunteer_quota }} participants</p>
+                                </div>
+                                <a href="{{ route('events.show', $event) }}" class="px-4 py-2 bg-[#D4A574] text-white rounded-lg text-sm hover:bg-[#c49560] transition">
+                                    Voir QR & Gérer
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-gray-500 text-center py-8">Aucun événement actif en ce moment.</p>
+                @endif
             </div>
 
             {{-- Recent Events --}}

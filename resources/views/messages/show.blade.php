@@ -44,4 +44,21 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script src="https://js.pusher.com/8.0/pusher.min.js"></script>
+        <script>
+            const pusher = new Pusher('{{ config('services.pusher.key') }}', {
+                cluster: '{{ config('services.pusher.cluster') }}',
+                encrypted: true
+            });
+
+            const channel = pusher.subscribe('conversation.{{ $conversation->id }}');
+            channel.bind('Illuminate\\Broadcasting\\MessageSent', function(data) {
+                if (data.message.sender_id !== {{ auth()->id() }}) {
+                    location.reload();
+                }
+            });
+        </script>
+    @endpush
 </x-app-layout>

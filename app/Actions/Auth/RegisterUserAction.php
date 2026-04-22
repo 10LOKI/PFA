@@ -16,7 +16,8 @@ class RegisterUserAction
         ],
         'partner' => [
             'event.browse', 'event.create', 'event.update', 'event.delete',
-            'event.generate-qr', 'checkin.validate', 'student.rate',
+            // 'event.generate-qr', // deprecated
+            'checkin.validate', 'student.rate',
         ],
     ];
 

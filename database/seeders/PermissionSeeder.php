@@ -16,6 +16,8 @@ class PermissionSeeder extends Seeder
             'event.checkin',
             'reward.browse',
             'reward.redeem',
+            'reward.update',
+            'reward.delete',
             'comment.create',
             'feedback.create',
             'certificate.download',
@@ -24,7 +26,7 @@ class PermissionSeeder extends Seeder
             'event.create',
             'event.update',
             'event.delete',
-            'event.generate-qr',
+            // 'event.generate-qr', // deprecated
             'checkin.validate',
             'student.rate',
 

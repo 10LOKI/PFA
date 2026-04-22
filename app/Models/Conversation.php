@@ -21,9 +21,9 @@ class Conversation extends Model
         return $this->hasMany(Message::class)->latest();
     }
 
-    public function latestMessage(): HasMany
+    public function latestMessage()
     {
-        return $this->hasMany(Message::class)->latestOfDefault();
+        return $this->hasOne(Message::class)->latestOfMany();
     }
 
     public function isParticipant(User $user): bool
