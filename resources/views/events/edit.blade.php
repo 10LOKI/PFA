@@ -41,8 +41,14 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label for="category" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> CATEGORY</label>
-                            <input type="text" name="category" id="category" value="{{ old('category', $event->category) }}"
-                                   class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono placeholder-[var(--neon-cyan)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300">
+                            <select name="category" id="category" class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] text-[var(--chrome-text)] font-mono focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all duration-300">
+                                <option value="">Select a category...</option>
+                                <option value="Environment" {{ $event->category === 'Environment' ? 'selected' : '' }}>Environment</option>
+                                <option value="Education" {{ $event->category === 'Education' ? 'selected' : '' }}>Education</option>
+                                <option value="Health" {{ $event->category === 'Health' ? 'selected' : '' }}>Health</option>
+                                <option value="Technology" {{ $event->category === 'Technology' ? 'selected' : '' }}>Technology</option>
+                                <option value="Community" {{ $event->category === 'Community' ? 'selected' : '' }}>Community</option>
+                            </select>
                         </div>
                         <div>
                             <label for="city" class="block text-sm font-mono uppercase tracking-widest text-[var(--neon-magenta)] mb-2">> LOCATION_CITY</label>

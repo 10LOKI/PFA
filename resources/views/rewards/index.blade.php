@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-3xl font-heading font-black text-[#FF00FF] text-glow-magenta uppercase tracking-wider">
+        <h2 class="text-3xl font-heading font-black text-[var(--neon-magenta)] text-glow-magenta uppercase tracking-wider">
             > MARKETPLACE
         </h2>
     </x-slot>
@@ -13,13 +13,13 @@
             <div class="flex flex-col md:flex-row justify-between items-center gap-6">
                 <div class="text-center md:text-left">
                     <p class="text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)]/60 mb-1">> WALLET_BALANCE</p>
-                    <p class="text-5xl font-heading font-black text-[var(--neon-orange)]" style="text-shadow: 0 0 15px #FF9900;">{{ number_format(auth()->user()->points_balance) }} <span class="text-2xl">PTS</span></p>
+                    <p class="text-5xl font-heading font-black text-[var(--neon-orange)] drop-shadow-[0_0_15px_#FF9900]">{{ number_format(auth()->user()->points_balance) }} <span class="text-2xl">PTS</span></p>
                 </div>
-                    <div class="text-center md:text-right">
-                        <p class="text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)]/60 mb-1">> OPERATOR_RANK</p>
-                        <p class="text-3xl font-heading font-bold text-[var(--neon-cyan)] uppercase" style="text-shadow: 0 0 10px #00FFFF;">{{ auth()->user()->grade }}</p>
-                        <p class="text-xs font-mono text-[var(--neon-cyan)] mt-1">NEXT_RANK: {{ \App\Actions\User\UpgradeGradeAction::getNextThreshold(auth()->user()->grade) ?? 'MAX' }}H</p>
-                    </div>
+                <div class="text-center md:text-right">
+                    <p class="text-sm font-mono uppercase tracking-widest text-[var(--chrome-text)]/60 mb-1">> OPERATOR_RANK</p>
+                    <p class="text-3xl font-heading font-bold text-[var(--neon-cyan)] uppercase drop-shadow-[0_0_10px_#00FFFF]">{{ auth()->user()->grade }}</p>
+                    <p class="text-xs font-mono text-[var(--neon-cyan)] mt-1">NEXT_RANK: {{ \App\Actions\User\UpgradeGradeAction::getNextThreshold(auth()->user()->grade) ?? 'MAX' }}H</p>
+                </div>
                 </div>
             </div>
 

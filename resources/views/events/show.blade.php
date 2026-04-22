@@ -118,37 +118,81 @@
                 </div>
 
                 <div class="space-y-6">
-                     {{-- Partner Check-in Terminal --}}
-                     @if(auth()->user()->can('checkin.validate') && auth()->id() === $event->partner_id)
-                         <div class="glass-panel border-2 border-[var(--neon-orange)] p-8 text-center relative">
-                             <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-orange)]"></div>
-                             <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-orange)]"></div>
-                             <h3 class="text-xl font-heading font-bold text-[var(--neon-orange)] mb-6 uppercase tracking-wider">CHECK-IN TERMINAL</h3>
+                        {{-- Partner Check-in Terminal --}}
+                        @if(auth()->user()->can('checkin.validate') && auth()->id() === $event->partner_id)
+                            <div class="glass-panel border-2 border-[var(--neon-orange)] p-8 relative">
+                                <div class="absolute -top-2 -right-2 w-8 h-8 border-t-2 border-r-2 border-[var(--neon-cyan)]"></div>
+                                <div class="absolute -bottom-2 -left-2 w-8 h-8 border-b-2 border-l-2 border-[var(--neon-cyan)]"></div>
 
-                             {{-- QR Scanner / Token Input --}}
-                             <div class="space-y-4">
-                                 <p class="text-sm font-mono text-[var(--chrome-text)]/60">SCAN STUDENT QR CODE OR ENTER TOKEN</p>
-                                 <input type="text" id="qr-token-input" placeholder="[ PASTE QR TOKEN ]" 
-                                        class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:shadow-[var(--glow-cyan)] transition-all"
-                                        required>
-                                 <button type="button" onclick="submitCheckIn()" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-sm uppercase tracking-widest hover:shadow-[var(--glow-cyan)] transition-all duration-200">
-                                     <span>CONFIRM CHECK-IN</span>
-                                 </button>
-                                 <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-2">OR use camera scanner (paste token if fails)</p>
-                             </div>
+                                <h3 class="text-2xl font-heading font-bold text-[var(--neon-orange)] uppercase tracking-wider mb-6 drop-shadow-[0_0_10px_#FF9900]">
+                                    🎯 CHECK-IN TERMINAL
+                                </h3>
 
-                              <script>
-                              function submitCheckIn() {
-                                  const token = document.getElementById('qr-token-input').value.trim();
-                                  if (!token) {
-                                      alert('Please enter or scan a QR token.');
-                                      return;
-                                  }
-                                  window.location.href = "{{ url('/checkin') }}/" + encodeURIComponent(token);
-                              }
-                              </script>
-                         </div>
-                     @endif
+                                {{-- QR Scanner / Token Input --}}
+                                <div class="space-y-4">
+                                    <p class="text-sm font-mono text-[var(--chrome-text)]/60">SCAN STUDENT QR CODE OR ENTER TOKEN</p>
+                                    <form id="checkin-form" onsubmit="return submitCheckIn(event)">
+                                        <input type="text" id="qr-token-input" placeholder="[ PASTE QR TOKEN OR SCAN ]"
+                                               class="w-full px-4 py-3 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono placeholder-[var(--neon-magenta)]/50 focus:outline-none focus:border-[var(--neon-cyan)] focus:ring-2 focus:ring-[var(--neon-magenta)] focus:ring-opacity-30 transition-all duration-200"
+                                               required>
+                                        <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-sm uppercase tracking-widest shadow-[var(--glow-cyan)] hover:shadow-[0_0_30px_#00FFFF] transition-all duration-200 mt-4">
+                                            <span>✓ CONFIRM CHECK-IN</span>
+                                        </button>
+                                    </form>
+                                    <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-2">OR use camera scanner (paste token if fails)</p>
+                                </div>
+
+                                {{-- Check-in Status Display --}}
+                                <div class="mt-8 pt-6 border-t border-[var(--neon-orange)]/30">
+                                    <h4 class="text-sm font-mono uppercase tracking-wider text-[var(--neon-orange)] mb-4">LIVE FEED</h4>
+                                    <div id="checkin-feedback" class="space-y-2 font-mono text-sm">
+                                        <p class="text-[var(--chrome-text)]/60">Terminal ready...</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                            async function submitCheckIn(event) {
+                                event.preventDefault();
+                                const token = document.getElementById('qr-token-input').value.trim();
+                                const feedback = document.getElementById('checkin-feedback');
+                                
+                                if (!token) {
+                                    feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Token required</p>';
+                                    return false;
+                                }
+
+                                feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-in...</p>';
+
+                                try {
+                                    const response = await fetch('{{ route("checkin.scan", ["token" => "__TOKEN__"]) }}'.replace('__TOKEN__', token), {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        },
+                                    });
+
+                                    const data = await response.json();
+
+                                    if (response.ok && data.success) {
+                                        feedback.innerHTML = `
+                                            <p class="text-green-400">✓ SUCCESS: ${data.student_name} checked in</p>
+                                            <p class="text-[var(--chrome-text)]">${data.time} | Potential: ${data.points_earned} pts</p>
+                                        `;
+                                        document.getElementById('qr-token-input').value = '';
+                                        setTimeout(() => location.reload(), 1500);
+                                    } else {
+                                        feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
+                                    }
+                                } catch (error) {
+                                    feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
+                                }
+
+                                return false;
+                            }
+                            </script>
+                        @endif
 
                     {{-- Registration / Status --}}
                     <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
@@ -161,49 +205,71 @@
 
                         @if($isRegistered)
                             <div class="text-center">
-                                @if($pivot->checked_in_at)
+                                @if($pivot->checked_in_at && $pivot->checked_out_at)
+                                    {{-- Checked out - points earned --}}
                                     <div class="border-2 border-green-500 bg-[rgba(34,197,94,0.1)] p-6 mb-6">
-                                        <p class="text-2xl font-heading text-green-400 drop-shadow-[0_0_10px_#22c55e] mb-2">✅ ACCESS GRANTED</p>
+                                        <p class="text-2xl font-heading text-green-400 drop-shadow-[0_0_10px_#22c55e] mb-2">✅ MISSION COMPLETE</p>
                                         <p class="text-sm font-mono text-[var(--neon-cyan)]">{{ $pivot->points_earned }} POINTS CREDITED</p>
                                     </div>
+                                @elseif($pivot->checked_in_at)
+                                    {{-- Checked in but not checked out --}}
+                                    <div class="border-2 border-[var(--neon-cyan)] bg-[rgba(0,255,255,0.1)] p-6 mb-6">
+                                        <p class="text-2xl font-heading text-[var(--neon-cyan)] drop-shadow-[0_0_10px_#00FFFF] mb-2">📋 CHECK-IN CONFIRMED</p>
+                                        <p class="text-sm font-mono text-[var(--chrome-text)]">Complete check-out after mission to earn points</p>
+                                        <p class="text-lg font-heading text-[var(--neon-orange)] mt-2 drop-shadow-[0_0_10px_#FF9900]">
+                                            POTENTIAL REWARD: {{ $event->effectivePoints() }} PTS
+                                        </p>
+                                    </div>
+                                    {{-- Check-out button for student --}}
+                                    <form action="{{ route('events.checkout', $event) }}" method="POST" class="mt-4" onsubmit="return submitCheckOut(event)">
+                                        @csrf
+                                        <input type="hidden" name="student_id" value="{{ auth()->id() }}">
+                                        <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-green-500 text-green-500 font-bold text-sm uppercase tracking-widest hover:bg-green-500 hover:text-black transition-all duration-200">
+                                            <span>✓ CHECK OUT NOW</span>
+                                        </button>
+                                    </form>
+                                    <div id="checkout-feedback" class="mt-2 text-sm font-mono"></div>
                                 @else
+                                    {{-- Registered but not checked in --}}
                                     <div class="border-2 border-[var(--neon-orange)] bg-[rgba(255,153,0,0.1)] p-6 mb-6">
                                         <p class="text-2xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900] mb-2">📋 AWAITING CHECK-IN</p>
-                                        <p class="text-sm font-mono text-[var(--chrome-text)]">PRESENT QR CODE AT VENUE</p>
+                                        <p class="text-sm font-mono text-[var(--chrome-text)]">Present QR code at venue to begin mission</p>
                                     </div>
-                                @endif
 
-                                {{-- Student's Personal QR Code --}}
-                                @if($pivot && $pivot->qr_token)
-                                    <div class="mt-6 p-4 border-2 border-[var(--neon-cyan)] bg-[rgba(0,255,255,0.05)]">
-                                        <p class="text-sm font-mono text-[var(--neon-cyan)] uppercase tracking-wider mb-3">Your Check-In QR</p>
-                                        <div class="flex justify-center">
-                                            {!! app(App\Actions\Event\GenerateStudentQrAction::class)->execute($pivot) !!}
+                                    {{-- Student's Personal QR Code --}}
+                                    @if($pivot && $pivot->qr_token && !$pivot->checked_in_at)
+                                        <div class="mt-6 p-4 border-2 border-[var(--neon-cyan)] bg-[rgba(0,255,255,0.05)]">
+                                            <p class="text-sm font-mono text-[var(--neon-cyan)] uppercase tracking-wider mb-3">YOUR CHECK-IN QR</p>
+                                            <div class="flex justify-center">
+                                                {!! app(App\Actions\Event\GenerateStudentQrAction::class)->execute($pivot) !!}
+                                            </div>
+                                            <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-3">Scan at venue to check in</p>
                                         </div>
-                                        <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-3">Scan this at the event to check in</p>
-                                    </div>
-                                @endif
+                                    @endif
 
-                                <form action="{{ route('events.unregister', $event) }}" method="POST" class="mt-6">
+                                    <form action="{{ route('events.unregister', $event) }}" method="POST" class="mt-6">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="px-6 py-3 border-2 border-red-500 text-red-500 font-mono uppercase tracking-widest hover:bg-red-500 hover:text-black transition-all duration-200">
+                                            🚫 CANCEL REGISTRATION
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        @else
+                            @if(!$event->isFull() && auth()->user()->can('event.register'))
+                                <form action="{{ route('events.register', $event) }}" method="POST">
                                     @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="px-6 py-3 border-2 border-red-500 text-red-500 font-mono uppercase tracking-widest hover:bg-red-500 hover:text-black transition-all duration-200">
-                                        🚫 CANCEL REGISTRATION
+                                    <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-lg uppercase tracking-widest shadow-[var(--glow-cyan)] hover:shadow-[0_0_30px_#00FFFF]">
+                                        <span>🔒 JOIN MISSION</span>
                                     </button>
                                 </form>
-                            </div>
-                        @elseif(!$event->isFull() && auth()->user()->can('event.register'))
-                            <form action="{{ route('events.register', $event) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="w-full btn-skew px-6 py-4 border-2 border-[var(--neon-cyan)] bg-[var(--neon-cyan)] text-black font-bold text-lg uppercase tracking-widest shadow-[var(--glow-cyan)] hover:shadow-[0_0_30px_#00FFFF]">
-                                    <span>🔒 JOIN MISSION</span>
-                                </button>
-                            </form>
-                        @elseif($event->isFull())
-                            <div class="text-center py-8">
-                                <p class="text-xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900]">MISSION CAPACITY REACHED</p>
-                                <p class="text-sm font-mono text-[var(--chrome-text)]/60 mt-2">ALL SLOTS FILLED</p>
-                            </div>
+                            @elseif($event->isFull())
+                                <div class="text-center py-8">
+                                    <p class="text-xl font-heading text-[var(--neon-orange)] drop-shadow-[0_0_10px_#FF9900]">MISSION CAPACITY REACHED</p>
+                                    <p class="text-sm font-mono text-[var(--chrome-text)]/60 mt-2">ALL SLOTS FILLED</p>
+                                </div>
+                            @endif
                         @endif
                     </div>
 
