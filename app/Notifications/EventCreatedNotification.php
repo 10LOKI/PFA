@@ -2,14 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Events\EventCreated;
 use App\Models\Event;
-use App\Models\Notification as NotificationModel;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class EventCreatedNotification extends Notification implements ShouldBroadcast
+class EventCreatedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -22,27 +21,33 @@ class EventCreatedNotification extends Notification implements ShouldBroadcast
 
     public function via(object $notifiable): array
     {
-        return ['broadcast'];
+        return ['mail'];
     }
 
-    public function toBroadcast(object $notifiable): EventCreated
+    public function toMail(object $notifiable): MailMessage
     {
-        return new EventCreated($this->event, $notifiable->id);
+        $url = route('events.show', $this->event);
+
+        return (new MailMessage)
+            ->subject('New Event Created - '.$this->event->title)
+            ->greeting('Hello '.$notifiable->name.'!')
+            ->line('A new event has been created:')
+            ->line('**Event:** '.$this->event->title)
+            ->line('**Category:** '.($this->event->category ?? 'General'))
+            ->line('**Location:** '.$this->event->city.', '.$this->event->address)
+            ->line('**Date:** '.$this->event->starts_at->format('d/m/Y H:i'))
+            ->line('**Points Reward:** '.$this->event->effectivePoints().' PTS')
+            ->action('View Event', $url)
+            ->line('If you are the event partner, please wait for admin approval.')
+            ->salutation('Regards, '.config('app.name'));
     }
 
-    /**
-     * Save notification to custom table
-     */
-    public function toCustomDatabase(object $notifiable): void
+    public function toArray(object $notifiable): array
     {
-        NotificationModel::create([
-            'user_id' => $notifiable->id,
-            'type' => 'event_created',
-            'title' => 'Nouvel événement',
-            'message' => $this->event->title,
-            'link' => route('events.show', $this->event),
+        return [
             'event_id' => $this->event->id,
-            'read' => false,
-        ]);
+            'event_title' => $this->event->title,
+            'type' => 'event_created',
+        ];
     }
 }

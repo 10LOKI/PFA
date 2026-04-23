@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Notification as NotificationModel;
 use App\Models\User;
+use App\Notifications\EventCreatedNotification;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,8 +16,23 @@ class EventController extends Controller
     {
         $query = Event::query();
 
-        // Admins see all events, others only approved
-        if (! auth()->user()->isAdmin()) {
+        // Filter by role:
+        // - Admin: sees all events
+        // - Partner: sees their own events (any status) + all approved events (unless filtering to own only)
+        // - Student: sees only approved events
+        if (auth()->user()->isAdmin()) {
+            // no filter
+        } elseif (auth()->user()->isPartner()) {
+            // If partner wants to see only their own events
+            if ($request->has('mine') && $request->boolean('mine')) {
+                $query->where('partner_id', auth()->id());
+            } else {
+                $query->where(function ($q) {
+                    $q->where('partner_id', auth()->id())
+                        ->orWhere('status', 'approved');
+                });
+            }
+        } else {
             $query->where('status', 'approved');
         }
 
@@ -51,7 +67,8 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        if (! $event->isApproved() && ! auth()->user()->isAdmin()) {
+        // Block access only if event is not approved AND user is not admin AND not the partner who created it
+        if (! $event->isApproved() && ! auth()->user()->isAdmin() && auth()->id() !== $event->partner_id) {
             abort(403);
         }
 
@@ -101,6 +118,12 @@ class EventController extends Controller
         }
 
         $event = Event::create($data);
+
+        // Send notification to partner (event creator) and all admins
+        $event->partner->notify(new EventCreatedNotification($event));
+        User::where('role', 'admin')->get()->each(function ($admin) use ($event) {
+            $admin->notify(new EventCreatedNotification($event));
+        });
 
         $message = $data['status'] === 'approved'
             ? 'Event created and approved successfully.'

@@ -13,13 +13,25 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RewardController;
 use App\Http\Controllers\StudentCheckInController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\WalletController;
-use App\Http\Controllers\WishlistController;
 use App\Models\Event;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => view('welcome'));
+
+Route::get('/test-mail', function () {
+    try {
+        Mail::raw('Test message', function ($message) {
+            $message->to('test@example.com')
+                ->subject('Test Email');
+        });
+
+        return 'Mail sent successfully!';
+    } catch (Exception $e) {
+        return 'Error sending mail: '.$e->getMessage();
+    }
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

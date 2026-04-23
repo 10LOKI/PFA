@@ -217,7 +217,7 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-3">
+                                <div class="flex items-center gap-3 flex-wrap">
                                     @php
                                         $statusClass = match($event->status) {
                                             'approved' => 'border-green-400 text-green-400',
@@ -234,6 +234,20 @@
                                     <a href="{{ route('events.show', $event) }}" class="text-sm text-[var(--neon-cyan)] hover:text-[var(--neon-magenta)] transition-colors font-mono uppercase tracking-wider">
                                         VIEW →
                                     </a>
+                                    @can('update', $event)
+                                        <a href="{{ route('events.edit', $event) }}" class="text-sm text-[var(--neon-cyan)] hover:text-[var(--neon-magenta)] transition-colors font-mono uppercase tracking-wider">
+                                            ✎ EDIT
+                                        </a>
+                                    @endcan
+                                    @can('delete', $event)
+                                        <form action="{{ route('events.destroy', $event) }}" method="POST" class="inline" onsubmit="return confirmDelete(this, '{{ $event->title }}');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="text-sm text-red-500 hover:text-red-400 transition-colors font-mono uppercase tracking-wider">
+                                                🗑 CANCEL
+                                            </button>
+                                        </form>
+                                    @endcan
                                 </div>
                             </div>
                         @endforeach

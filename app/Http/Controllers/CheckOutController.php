@@ -31,8 +31,9 @@ class CheckOutController extends Controller
         try {
             $this->checkOut->execute($event, $student);
 
-            $pivot = $event->participants()->where('user_id', $student->id)->first()->pivot;
-            $pointsEarned = $pivot ? ($pivot->points_earned ?? 0) : 0;
+            // Send check-out notification to student
+            $pointsEarned = $event->participants()->where('user_id', $student->id)->first()->pivot->points_earned ?? 0;
+            $student->notify(new EventCheckOutNotification($event, $student, $pointsEarned));
 
             if ($request->expectsJson() || $request->wantsJson()) {
                 return response()->json([

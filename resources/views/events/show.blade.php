@@ -43,30 +43,46 @@
 
                          <p class="text-[var(--chrome-text)] text-lg mb-6 leading-relaxed font-mono">{{ $event->description }}</p>
 
-                         {{-- Action Buttons --}}
-                         <div class="flex flex-wrap gap-4 mb-6 pt-6 border-t border-[var(--neon-cyan)]/30">
-                            @if(auth()->user()->can('event.register'))
-                                @if($event->isLikedBy(auth()->user()))
-                                    <form action="{{ route('events.unlike', $event) }}" method="POST" class="inline" id="like-form-{{ $event->id }}">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="like-btn liked flex items-center gap-2 px-6 py-3 border-2 border-red-500 text-red-500 font-bold text-sm uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95">
-                                            <span class="heart-icon text-lg">❤️</span>
-                                            <span>UNLIKE ({{ $event->likesCount }})</span>
-                                        </button>
-                                    </form>
-                                @else
-                                    <form action="{{ route('events.like', $event) }}" method="POST" class="inline" id="like-form-{{ $event->id }}">
-                                        @csrf
-                                        <button type="submit" class="like-btn flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-200 active:scale-95 hover:scale-105">
-                                            <span class="heart-icon text-lg transition-transform hover:scale-125">🤍</span>
-                                            <span>LIKE ({{ $event->likesCount }})</span>
-                                        </button>
-                                    </form>
-                                @endif
-                            @endif
+                          {{-- Action Buttons --}}
+                          <div class="flex flex-wrap gap-4 mb-6 pt-6 border-t border-[var(--neon-cyan)]/30">
+                             @if(auth()->user()->can('event.register'))
+                                 @if($event->isLikedBy(auth()->user()))
+                                     <form action="{{ route('events.unlike', $event) }}" method="POST" class="inline" id="like-form-{{ $event->id }}">
+                                         @csrf
+                                         @method('DELETE')
+                                         <button type="submit" class="like-btn liked flex items-center gap-2 px-6 py-3 border-2 border-red-500 text-red-500 font-bold text-sm uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95">
+                                             <span class="heart-icon text-lg">❤️</span>
+                                             <span>UNLIKE ({{ $event->likesCount }})</span>
+                                         </button>
+                                     </form>
+                                 @else
+                                     <form action="{{ route('events.like', $event) }}" method="POST" class="inline" id="like-form-{{ $event->id }}">
+                                         @csrf
+                                         <button type="submit" class="like-btn flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-200 active:scale-95 hover:scale-105">
+                                             <span class="heart-icon text-lg transition-transform hover:scale-125">🤍</span>
+                                             <span>LIKE ({{ $event->likesCount }})</span>
+                                         </button>
+                                     </form>
+                                 @endif
+                             @endif
 
-                        </div>
+                             @can('update', $event)
+                                 <a href="{{ route('events.edit', $event) }}" class="flex items-center gap-2 px-6 py-3 border-2 border-[var(--neon-cyan)] text-[var(--neon-cyan)] font-bold text-sm uppercase tracking-widest hover:bg-[var(--neon-cyan)] hover:text-black transition-all duration-200">
+                                     <span>✎ EDIT MISSION</span>
+                                 </a>
+                             @endcan
+
+                             @can('delete', $event)
+                                 <form action="{{ route('events.destroy', $event) }}" method="POST" onsubmit="return confirmDelete(this, '{{ $event->title }}');">
+                                     @csrf
+                                     @method('DELETE')
+                                     <button type="submit" class="flex items-center gap-2 px-6 py-3 border-2 border-red-500 text-red-500 font-bold text-sm uppercase tracking-widest hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95">
+                                         <span>🗑 CANCEL MISSION</span>
+                                     </button>
+                                 </form>
+                             @endcan
+
+                         </div>
 
                         {{-- Terminal Data Block --}}
                         <div class="bg-[var(--void-bg)] border-2 border-[var(--neon-cyan)] p-6 font-mono">

@@ -137,6 +137,12 @@ class User extends Authenticatable
         return $this->morphedByMany(Event::class, 'likeable', 'likes', 'user_id', 'likeable_id');
     }
 
+    // Route notifications for the mail channel
+    public function routeNotificationForMail($notifiable)
+    {
+        return $notifiable->email;
+    }
+
     // Override Notifiable trait - use our custom notifications table
     public function notifications($class = null)
     {
