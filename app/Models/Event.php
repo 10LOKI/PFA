@@ -31,6 +31,17 @@ class Event extends Model
         ];
     }
 
+    // Prevent hard delete — preserve historical event data (points, participants)
+    public function forceDelete(): never
+    {
+        throw new \LogicException('Event hard deletion is forbidden. Cancel the event instead (status = cancelled).');
+    }
+
+    public function restore(): never
+    {
+        throw new \LogicException('Event restoration is not supported.');
+    }
+
     public function isApproved(): bool
     {
         return $this->status === 'approved';

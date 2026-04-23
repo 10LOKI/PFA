@@ -50,6 +50,27 @@ class User extends Authenticatable
         ];
     }
 
+    // Prevent hard delete — must preserve audit trail
+    public function forceDelete(): never
+    {
+        throw new \LogicException('User hard deletion is forbidden. Use status flags or contact system administrator.');
+    }
+
+    public function restore(): never
+    {
+        throw new \LogicException('User restoration is not supported.');
+    }
+
+    // Prevent direct points_balance updates (defense in depth)
+    protected static function booted(): void
+    {
+        static::updating(function (User $user) {
+            if ($user->isDirty('points_balance')) {
+                throw new \LogicException('Direct update of points_balance is forbidden. Use CreditPointsAction and points_transactions ledger.');
+            }
+        });
+    }
+
     // --- Role helpers ---
     public function isAdmin(): bool
     {
@@ -138,9 +159,9 @@ class User extends Authenticatable
     }
 
     // Route notifications for the mail channel
-    public function routeNotificationForMail($notifiable)
+    public function routeNotificationForMail($notification = null): string
     {
-        return $notifiable->email;
+        return $this->email;
     }
 
     // Override Notifiable trait - use our custom notifications table

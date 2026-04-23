@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\EventUser;
+use App\Notifications\EventCheckInNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +20,9 @@ class StudentCheckInController extends Controller
 
         $registration = EventUser::where('qr_token', $token)->firstOrFail();
         $event = $registration->event;
+
+        // Authorize: only event owner or admin can validate check-ins
+        $this->authorize('checkIn', $event);
 
         if ($event->status !== 'approved') {
             throw new LogicException('Event is not approved.');

@@ -256,3 +256,44 @@
 - [x] Routes: /messages, /messages/{conversation}, /messages/start
 - [x] Views: messages/index, messages/show (styled with palette #D4A574)
 - [x] Navigation: link to messages added
+
+## Milestone 22: Security Hardening & Tokenomics Integrity (2026-04-23)
+
+### Check-in/Check-out Ownership Enforcement (P0 Critical)
+- **Context**: QR check-in/out validation was open to any partner with `checkin.validate` permission, allowing cross-organization fraud.
+- **Fix**: Extended `EventPolicy` with `checkIn()` and `checkOut()` methods — only event owner (`$user->id === $event->partner_id`) or admin (`isAdmin()`) can validate.
+- **Controllers**: Added `$this->authorize('checkIn', $event)` in `StudentCheckInController` and `$this->authorize('checkOut', $event)` in `CheckOutController`.
+- **Tests**: `tests/Feature/Event/CheckInSecurityTest.php` — 6 tests covering owner vs foreign partner vs admin scenarios.
+
+### Historical Data Preservation — Restrict Cascade Delete (P1 Critical)
+- **Risk**: `event_user` foreign keys used `cascadeOnDelete()` — deleting a user/event erased participation history (points, check-ins), violating immutability.
+- **Migration**: `2026_04_23_134323_modify_event_user_foreign_keys_to_restrict.php` changed to `restrictOnDelete()`.
+- **Model Guard**: `User` and `Event` models override `forceDelete()` / `restore()` to throw `LogicException` — hard deletion forbidden, use soft `status` flags.
+- **Rationale**: Participation records (`event_user`) hold earned points, check-in timestamps, partner ratings — must never disappear.
+
+### Points Balance Integrity — Refactored CreditPointsAction (P2 High)
+- **Problem**: Previous attempt added a BEFORE UPDATE trigger on `users.points_balance` to block direct updates. This also blocked `CreditPointsAction`, which is the ONLY legitimate writer.
+- **Solution**: 
+  - **Rollback**: Dropped `prevent_points_balance_direct_update_trigger`.
+  - **Refactored** `CreditPointsAction`: removed `$user->increment('points_balance')`. Now only creates `PointsTransaction`.
+  - The existing `sync_points_balance_after_insert` trigger (Milestone 7) automatically recalculates and updates `users.points_balance` after each transaction insert.
+- **Model Guard**: `User::booted()` still blocks `save/update` changes to `points_balance` via Eloquent; `increment()` bypasses this guard but we no longer use it in app code.
+
+### Miscellaneous Fixes
+- `User::routeNotificationForMail` signature fixed to accept `$notification = null` to prevent `Undefined property: email` during notification dispatch.
+- `EventPolicy@create` now correctly checks `$user->isPartner()` (was incorrect before).
+- Code formatted with Laravel Pint; all tests **40 passed, 1 skipped**.
+
+### Files Modified
+- `app/Policies/EventPolicy.php` — + `checkIn`, `checkOut` methods
+- `app/Http/Controllers/StudentCheckInController.php` — authorize + import `EventCheckInNotification`
+- `app/Http/Controllers/CheckOutController.php` — authorize + import `EventCheckOutNotification`
+- `app/Models/User.php` — `forceDelete()`, `restore()`, `booted()` guard, `routeNotificationForMail` fix
+- `app/Models/Event.php` — `forceDelete()`, `restore()`
+- `app/Actions/Points/CreditPointsAction.php` — removed direct increment, calculates `balance_after` before insert
+- `database/migrations/2026_04_23_134323_modify_event_user_foreign_keys_to_restrict.php` — new migration (restrict FK)
+- `tests/Feature/Event/CheckInSecurityTest.php` — new test suite
+
+### Removed
+- `database/migrations/2026_04_23_134447_create_prevent_points_balance_direct_update_trigger.php` — rolled back & deleted
+

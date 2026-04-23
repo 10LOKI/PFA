@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Event\CheckOutStudentAction;
 use App\Models\Event;
 use App\Models\User;
+use App\Notifications\EventCheckOutNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,6 +23,9 @@ class CheckOutController extends Controller
 
         $student = User::findOrFail($request->student_id);
         $authUser = auth()->user();
+
+        // Authorize: only event owner or admin can validate check-outs
+        $this->authorize('checkOut', $event);
 
         // Students can only check themselves out; partners/admins can check any student
         if (! $authUser->isAdmin() && ! $authUser->isPartner()) {
