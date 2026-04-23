@@ -17,14 +17,15 @@ class CreditPointsAction
         ?Model $source = null
     ): PointsTransaction {
         return DB::transaction(function () use ($user, $amount, $type, $description, $source) {
-            $user->increment('points_balance', $amount);
-            $user->refresh();
+            // Calculate what the new balance will be after this transaction
+            // The sync_points_balance_after_insert trigger will update users.points_balance automatically
+            $balanceAfter = $user->points_balance + $amount;
 
             return PointsTransaction::create([
                 'user_id' => $user->id,
                 'type' => $type,
                 'amount' => $amount,
-                'balance_after' => $user->points_balance,
+                'balance_after' => $balanceAfter,
                 'source_type' => $source ? get_class($source) : null,
                 'source_id' => $source?->id,
                 'description' => $description,

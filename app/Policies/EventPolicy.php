@@ -39,5 +39,17 @@ class EventPolicy
         return $user->isAdmin();
     }
 
+    public function checkIn(User $user, Event $event): bool
+    {
+        // Only event owner (partner) or admin can check in students
+        return $user->isAdmin() || $user->id === $event->partner_id;
+    }
+
+    public function checkOut(User $user, Event $event): bool
+    {
+        // Only event owner (partner) or admin can check out students
+        return $user->isAdmin() || $user->id === $event->partner_id;
+    }
+
     // generateQr permission removed - QR now student-specific
 }
