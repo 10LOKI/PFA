@@ -16,13 +16,30 @@ class EventRegistrationController extends Controller
 
         abort_if(! $user->can('event.register'), 403);
         abort_if(! $event->isApproved(), 403, 'Event is not available.');
-        abort_if($event->isFull(), 422, 'Event is full.');
+
+        if ($event->isFull()) {
+            return back()->with('error', 'Event is full. Registration failed.');
+        }
 
         $alreadyRegistered = $event->participants()
             ->wherePivot('user_id', $user->id)
             ->exists();
 
-        abort_if($alreadyRegistered, 422, 'Already registered.');
+        if ($alreadyRegistered) {
+            return back()->with('error', 'You are already registered for this event.');
+        }
+
+        if ($event->isFull()) {
+            return back()->with('error', 'Event is full. Registration failed.');
+        }
+
+        $alreadyRegistered = $event->participants()
+            ->wherePivot('user_id', $user->id)
+            ->exists();
+
+        if ($alreadyRegistered) {
+            return back()->with('error', 'You are already registered for this event.');
+        }
 
         // Generate unique QR token for this registration
         $token = Str::uuid()->toString();
