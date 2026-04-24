@@ -65,7 +65,7 @@ class UserSeeder extends Seeder
                 'is_certified_partner' => true,
             ],
             [
-                'name' => 'Partner One',
+                'name' => 'ayoub One',
                 'email' => 'partner@role.com',
                 'password' => 'password',
                 'role' => 'partner',
@@ -83,9 +83,9 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        foreach ($users as $userData) {
+                foreach ($users as $userData) {
             $role = $userData['role'];
-            unset($userData['role']);
+         
 
             $user = User::updateOrCreate(
                 ['email' => $userData['email']],
@@ -95,13 +95,14 @@ class UserSeeder extends Seeder
             $user->syncPermissions(self::PERMISSIONS[$role]);
 
             if ($role === 'student' && $establishments->isNotEmpty()) {
-                $user->grades()->firstOrCreate([
-                    'establishment_id' => $userData['establishment_id'] ?? $establishments->random()->id,
-                ], [
-                    'level' => 'Licence 2',
-                    'field' => 'Informatique',
-                    'academic_year' => 2025,
-                ]);
+                $user->grades()->firstOrCreate(
+                    ['establishment_id' => $userData['establishment_id'] ?? $establishments->random()->id],
+                    [
+                        'level' => 'Licence 2',
+                        'field' => 'Informatique',
+                        'academic_year' => 2025,
+                    ]
+                );
             }
         }
     }
