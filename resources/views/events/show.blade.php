@@ -167,8 +167,36 @@
                                 </div>
                             </div>
 
-                            <script>
-                            async function submitCheckIn(event) {
+                     <script>
+                     function copyToken(btn) {
+                         const input = btn.parentElement.querySelector('input[type="text"]');
+                         input.select();
+                         input.setSelectionRange(0, 99999); // For mobile
+
+                         // Use modern clipboard API
+                         navigator.clipboard.writeText(input.value).then(() => {
+                             // Visual feedback
+                             const originalText = btn.innerHTML;
+                             btn.innerHTML = '<span style="text-green-400">✓ COPIED</span>';
+                             btn.classList.remove('border-[var(--neon-magenta)]', 'text-[var(--neon-magenta)]');
+                             btn.classList.add('border-green-400', 'text-green-400');
+
+                             setTimeout(() => {
+                                 btn.innerHTML = originalText;
+                                 btn.classList.remove('border-green-400', 'text-green-400');
+                                 btn.classList.add('border-[var(--neon-magenta)]', 'text-[var(--neon-magenta)]');
+                             }, 2000);
+                         }).catch(err => {
+                             // Fallback for older browsers
+                             document.execCommand('copy');
+                             btn.innerHTML = '<span>✓ COPIED</span>';
+                             setTimeout(() => {
+                                 btn.innerHTML = '<span>COPY</span>';
+                             }, 2000);
+                         });
+                     }
+
+                     async function submitCheckIn(event) {
                                 event.preventDefault();
                                 const token = document.getElementById('qr-token-input').value.trim();
                                 const feedback = document.getElementById('checkin-feedback');
@@ -210,49 +238,73 @@
                              </script>
                          @endif
 
-                         <script>
-                         async function submitCheckOut(event) {
-                             event.preventDefault();
-                             const form = event.target;
-                             const feedback = document.getElementById('checkout-feedback');
-                             const studentId = form.querySelector('input[name="student_id"]').value;
-                             
-                             if (!studentId) {
-                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Student ID required</p>';
-                                 return false;
-                             }
+                          <script>
+                          async function submitCheckOut(event) {
+                              event.preventDefault();
+                              const form = event.target;
+                              const feedback = document.getElementById('checkout-feedback');
+                              const studentId = form.querySelector('input[name="student_id"]').value;
+                              const submitBtn = form.querySelector('button[type="submit"]');
 
-                             feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-out...</p>';
+                              if (!studentId) {
+                                  feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Student ID required</p>';
+                                  return false;
+                              }
 
-                             try {
-                                 const response = await fetch('{{ route("events.checkout", $event) }}', {
-                                     method: 'POST',
-                                     headers: {
-                                         'Content-Type': 'application/json',
-                                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                     },
-                                     body: JSON.stringify({ student_id: studentId }),
-                                 });
+                              // Disable button to prevent multiple submissions
+                              submitBtn.disabled = true;
+                              submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                              submitBtn.innerHTML = '<span>⏳ PROCESSING...</span>';
 
-                                 const data = await response.json();
+                              feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-out...</p>';
 
-                                 if (response.ok && data.success) {
-                                     feedback.innerHTML = `
-                                         <p class="text-green-400">✓ SUCCESS: ${data.message}</p>
-                                         <p class="text-[var(--chrome-text)]">${data.points_earned} POINTS CREDITED | TOTAL HOURS: ${data.total_hours}</p>
-                                     `;
-                                     form.reset();
-                                     setTimeout(() => location.reload(), 3000);
-                                 } else {
-                                     feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
-                                 }
-                             } catch (error) {
-                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
-                             }
+                              try {
+                                  const response = await fetch('{{ route("events.checkout", $event) }}', {
+                                      method: 'POST',
+                                      headers: {
+                                          'Content-Type': 'application/json',
+                                          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                      },
+                                      body: JSON.stringify({ student_id: studentId }),
+                                  });
 
-                             return false;
-                         }
-                         </script>
+                                  const data = await response.json();
+
+                                  if (response.ok && data.success) {
+                                      feedback.innerHTML = `
+                                          <p class="text-green-400">✓ SUCCESS: ${data.message}</p>
+                                          <p class="text-[var(--chrome-text)]">${data.points_earned} POINTS CREDITED | TOTAL HOURS: ${data.total_hours}</p>
+                                      `;
+                                      // Update button to reflect completed status
+                                      submitBtn.disabled = true;
+                                      submitBtn.classList.remove('hover:shadow-[0_0_30px_#00FFFF]', 'hover:bg-green-500', 'hover:text-black');
+                                      submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-green-500', 'text-black');
+                                      submitBtn.innerHTML = '<span>✓ CHECKED OUT</span>';
+
+                                      // Update header points balance immediately
+                                      const headerPoints = document.getElementById('header-points-balance');
+                                      if (headerPoints) {
+                                          headerPoints.textContent = Number(data.points_balance).toLocaleString();
+                                      }
+
+                                      setTimeout(() => location.reload(), 3000);
+                                  } else {
+                                      feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
+                                      // Re-enable button on error
+                                      submitBtn.disabled = false;
+                                      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                      submitBtn.innerHTML = '<span>✓ CHECK OUT NOW</span>';
+                                  }
+                              } catch (error) {
+                                  feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
+                                  submitBtn.disabled = false;
+                                  submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                  submitBtn.innerHTML = '<span>✓ CHECK OUT NOW</span>';
+                              }
+
+                              return false;
+                          }
+                          </script>
 
                     {{-- Registration / Status --}}
                     <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">
@@ -304,6 +356,24 @@
                                                 {!! app(App\Actions\Event\GenerateStudentQrAction::class)->execute($pivot) !!}
                                             </div>
                                             <p class="text-xs font-mono text-[var(--chrome-text)]/60 mt-3">Scan at venue to check in</p>
+
+                                            {{-- Copyable Token Input --}}
+                                            <div class="mt-4">
+                                                <p class="text-sm font-mono text-[var(--neon-magenta)] uppercase tracking-wider mb-2">Manual Entry Token</p>
+                                                <div class="flex gap-2">
+                                                    <input type="text" readonly
+                                                        value="{{ $pivot->qr_token }}"
+                                                        class="flex-1 px-3 py-2 bg-[var(--void-bg)] border-2 border-[var(--neon-magenta)] text-[var(--neon-cyan)] font-mono text-sm focus:outline-none cursor-pointer"
+                                                        onclick="this.select()"
+                                                        title="Click to select, then copy"
+                                                        style="font-size: 12px; letter-spacing: 0.5px;">
+                                                    <button type="button"
+                                                        onclick="copyToken(this)"
+                                                        class="px-4 py-2 border-2 border-[var(--neon-magenta)] text-[var(--neon-magenta)] font-mono text-xs uppercase tracking-widest hover:bg-[var(--neon-magenta)] hover:text-black transition-all duration-200">
+                                                        <span>COPY</span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                         </div>
                                     @endif
 

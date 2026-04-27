@@ -47,8 +47,22 @@ class EventPolicy
 
     public function checkOut(User $user, Event $event): bool
     {
-        // Only event owner (partner) or admin can check out students
-        return $user->isAdmin() || $user->id === $event->partner_id;
+        // Admin can always check out
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        // Event owner (partner) can check out students for their own events
+        if ($user->id === $event->partner_id) {
+            return true;
+        }
+
+        // Student can check out if they are registered for the event
+        if ($user->isStudent()) {
+            return $event->participants()->where('user_id', $user->id)->exists();
+        }
+
+        return false;
     }
 
     // generateQr permission removed - QR now student-specific

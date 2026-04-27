@@ -44,12 +44,12 @@
             <!-- Right side: Status LEDs + Points + User Menu -->
             <div class="flex items-center gap-6">
                 @if(auth()->user()->role === 'student')
-                    <div class="hidden sm:flex items-center">
-                        <div class="border-2 border-[var(--neon-orange)] px-4 py-2 bg-[rgba(255,153,0,0.1)]">
-                            <span class="text-lg font-heading font-bold text-[var(--neon-orange)] drop-shadow-[0_0_5px_#FF9900]">{{ number_format(auth()->user()->points_balance) }}</span>
-                            <span class="text-xs font-mono text-[var(--neon-orange)] ml-1">PTS</span>
-                        </div>
-                    </div>
+                     <div class="hidden sm:flex items-center">
+                         <div class="border-2 border-[var(--neon-orange)] px-4 py-2 bg-[rgba(255,153,0,0.1)]">
+                             <span id="header-points-balance" class="text-lg font-heading font-bold text-[var(--neon-orange)] drop-shadow-[0_0_5px_#FF9900]">{{ number_format(auth()->user()->points_balance) }}</span>
+                             <span class="text-xs font-mono text-[var(--neon-orange)] ml-1">PTS</span>
+                         </div>
+                     </div>
                 @endif
 
                 <!-- Notification LED -->
