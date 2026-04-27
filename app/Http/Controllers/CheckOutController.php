@@ -35,6 +35,9 @@ class CheckOutController extends Controller
         try {
             $this->checkOut->execute($event, $student);
 
+            // Refresh student to get latest balance and hours
+            $student->refresh();
+
             // Send check-out notification to student
             $pointsEarned = $event->participants()->where('user_id', $student->id)->first()->pivot->points_earned ?? 0;
             $student->notify(new EventCheckOutNotification($event, $student, $pointsEarned));
@@ -44,6 +47,7 @@ class CheckOutController extends Controller
                     'success' => true,
                     'message' => "Check-out confirmed for {$student->name}",
                     'points_earned' => $pointsEarned,
+                    'points_balance' => $student->points_balance,
                     'total_hours' => $student->total_hours,
                 ]);
             }
