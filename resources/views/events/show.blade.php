@@ -210,49 +210,66 @@
                              </script>
                          @endif
 
-                         <script>
-                         async function submitCheckOut(event) {
-                             event.preventDefault();
-                             const form = event.target;
-                             const feedback = document.getElementById('checkout-feedback');
-                             const studentId = form.querySelector('input[name="student_id"]').value;
-                             
-                             if (!studentId) {
-                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Student ID required</p>';
-                                 return false;
-                             }
+                          <script>
+                          async function submitCheckOut(event) {
+                              event.preventDefault();
+                              const form = event.target;
+                              const feedback = document.getElementById('checkout-feedback');
+                              const studentId = form.querySelector('input[name="student_id"]').value;
+                              const submitBtn = form.querySelector('button[type="submit"]');
 
-                             feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-out...</p>';
+                              if (!studentId) {
+                                  feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">⚠ ERROR: Student ID required</p>';
+                                  return false;
+                              }
 
-                             try {
-                                 const response = await fetch('{{ route("events.checkout", $event) }}', {
-                                     method: 'POST',
-                                     headers: {
-                                         'Content-Type': 'application/json',
-                                         'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                     },
-                                     body: JSON.stringify({ student_id: studentId }),
-                                 });
+                              // Disable button to prevent multiple submissions
+                              submitBtn.disabled = true;
+                              submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                              submitBtn.innerHTML = '<span>⏳ PROCESSING...</span>';
 
-                                 const data = await response.json();
+                              feedback.innerHTML = '<p class="text-[var(--neon-cyan)]">⏳ Processing check-out...</p>';
 
-                                 if (response.ok && data.success) {
-                                     feedback.innerHTML = `
-                                         <p class="text-green-400">✓ SUCCESS: ${data.message}</p>
-                                         <p class="text-[var(--chrome-text)]">${data.points_earned} POINTS CREDITED | TOTAL HOURS: ${data.total_hours}</p>
-                                     `;
-                                     form.reset();
-                                     setTimeout(() => location.reload(), 3000);
-                                 } else {
-                                     feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
-                                 }
-                             } catch (error) {
-                                 feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
-                             }
+                              try {
+                                  const response = await fetch('{{ route("events.checkout", $event) }}', {
+                                      method: 'POST',
+                                      headers: {
+                                          'Content-Type': 'application/json',
+                                          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                      },
+                                      body: JSON.stringify({ student_id: studentId }),
+                                  });
 
-                             return false;
-                         }
-                         </script>
+                                  const data = await response.json();
+
+                                  if (response.ok && data.success) {
+                                      feedback.innerHTML = `
+                                          <p class="text-green-400">✓ SUCCESS: ${data.message}</p>
+                                          <p class="text-[var(--chrome-text)]">${data.points_earned} POINTS CREDITED | TOTAL HOURS: ${data.total_hours}</p>
+                                      `;
+                                      // Update button to reflect completed status
+                                      submitBtn.disabled = true;
+                                      submitBtn.classList.remove('hover:shadow-[0_0_30px_#00FFFF]', 'hover:bg-green-500', 'hover:text-black');
+                                      submitBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-green-500', 'text-black');
+                                      submitBtn.innerHTML = '<span>✓ CHECKED OUT</span>';
+                                      setTimeout(() => location.reload(), 3000);
+                                  } else {
+                                      feedback.innerHTML = `<p class="text-[var(--neon-magenta)]">✗ ERROR: ${data.message || 'Unknown error'}</p>`;
+                                      // Re-enable button on error
+                                      submitBtn.disabled = false;
+                                      submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                      submitBtn.innerHTML = '<span>✓ CHECK OUT NOW</span>';
+                                  }
+                              } catch (error) {
+                                  feedback.innerHTML = '<p class="text-[var(--neon-magenta)]">✗ SYSTEM ERROR: Connection failed</p>';
+                                  submitBtn.disabled = false;
+                                  submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                                  submitBtn.innerHTML = '<span>✓ CHECK OUT NOW</span>';
+                              }
+
+                              return false;
+                          }
+                          </script>
 
                     {{-- Registration / Status --}}
                     <div class="glass-panel border-l-4 border-l-[var(--neon-magenta)] p-8 relative">

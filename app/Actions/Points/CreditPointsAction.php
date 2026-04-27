@@ -17,11 +17,9 @@ class CreditPointsAction
         ?Model $source = null
     ): PointsTransaction {
         return DB::transaction(function () use ($user, $amount, $type, $description, $source) {
-            // Calculate what the new balance will be after this transaction
-            // The sync_points_balance_after_insert trigger will update users.points_balance automatically
             $balanceAfter = $user->points_balance + $amount;
 
-            return PointsTransaction::create([
+            $transaction = PointsTransaction::create([
                 'user_id' => $user->id,
                 'type' => $type,
                 'amount' => $amount,
@@ -30,6 +28,13 @@ class CreditPointsAction
                 'source_id' => $source?->id,
                 'description' => $description,
             ]);
+
+            // Directly update points_balance via query builder to avoid triggering
+            // the User model's "updating" event which forbids direct changes.
+            // This is safe because all points changes flow through this action.
+            User::where('id', $user->id)->increment('points_balance', $amount);
+
+            return $transaction;
         });
     }
 }

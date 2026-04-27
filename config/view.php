@@ -11,7 +11,7 @@ return [
         realpath(storage_path('framework/views'))
     ),
 
-    'namespace' => [
+    'namespaces' => [
         'mail' => resource_path('views/emails'),
     ],
 

@@ -56,14 +56,8 @@
                         </div>
                     @endforelse
                 </div>
-            </div>
-
-            {{-- Pagination --}}
-            @if($notifications->hasPages())
-                <div class="mt-6 flex justify-center">
-                    {{ $notifications->links() }}
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 
