@@ -16,14 +16,8 @@ class EventController extends Controller
     {
         $query = Event::query();
 
-        // Filter by role:
-        // - Admin: sees all events
-        // - Partner: sees their own events (any status) + all approved events (unless filtering to own only)
-        // - Student: sees only approved events
         if (auth()->user()->isAdmin()) {
-            // no filter
         } elseif (auth()->user()->isPartner()) {
-            // If partner wants to see only their own events
             if ($request->has('mine') && $request->boolean('mine')) {
                 $query->where('partner_id', auth()->id());
             } else {
@@ -36,7 +30,6 @@ class EventController extends Controller
             $query->where('status', 'approved');
         }
 
-        // Search filter (title or description)
         if ($request->filled('search')) {
             $search = $request->input('search');
             $query->where(function ($q) use ($search) {
@@ -67,7 +60,6 @@ class EventController extends Controller
     {
         $this->authorize('view', $event);
 
-        // Block access only if event is not approved AND user is not admin AND not the partner who created it
         if (! $event->isApproved() && ! auth()->user()->isAdmin() && auth()->id() !== $event->partner_id) {
             abort(403);
         }
@@ -188,7 +180,6 @@ class EventController extends Controller
                 'title' => 'Nouvel événement approuvé',
                 'message' => $event->title,
                 'link' => route('events.show', $event),
-                'event_id' => $event->id,
                 'read' => false,
             ]);
         }

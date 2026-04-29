@@ -24,10 +24,8 @@ class CheckOutController extends Controller
         $student = User::findOrFail($request->student_id);
         $authUser = auth()->user();
 
-        // Authorize: only event owner or admin can validate check-outs
         $this->authorize('checkOut', $event);
 
-        // Students can only check themselves out; partners/admins can check any student
         if (! $authUser->isAdmin() && ! $authUser->isPartner()) {
             abort_if($student->id !== $authUser->id, 403, 'You can only check out yourself.');
         }
@@ -35,11 +33,9 @@ class CheckOutController extends Controller
         try {
             $this->checkOut->execute($event, $student);
 
-            // Refresh student to get latest balance and hours
             $student->refresh();
 
-            // Send check-out notification to student
-            $pointsEarned = $event->participants()->where('user_id', $student->id)->first()->pivot->points_earned ?? 0;
+            $pointsEarned = optional($event->participants()->where('user_id', $student->id)->first())->pivot->points_earned ?? 0;
             $student->notify(new EventCheckOutNotification($event, $student, $pointsEarned));
 
             if ($request->expectsJson() || $request->wantsJson()) {

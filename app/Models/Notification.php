@@ -12,7 +12,6 @@ class Notification extends Model
         'title',
         'message',
         'link',
-        'event_id',
         'read',
     ];
 

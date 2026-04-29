@@ -16,11 +16,22 @@ class RewardController extends Controller
     {
         $this->authorize('viewAny', Reward::class);
 
-        $rewards = Reward::where('is_active', true)
-            ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
-            ->where(fn ($q) => $q->whereNull('stock')->orWhere('stock', '>', 0))
-            ->latest()
-            ->paginate(12);
+        $user = auth()->user();
+        $query = Reward::query();
+
+        // Students see only available rewards (marketplace)
+        if ($user->isStudent()) {
+            $query->where('is_active', true)
+                ->where(fn ($q) => $q->whereNull('expires_at')->orWhere('expires_at', '>', now()))
+                ->where(fn ($q) => $q->whereNull('stock')->orWhere('stock', '>', 0));
+        }
+        // Partners see only their own created rewards (management view)
+        elseif ($user->isPartner()) {
+            $query->where('partner_id', $user->id);
+        }
+        // Admins see all rewards (no additional filter)
+
+        $rewards = $query->latest()->paginate(12);
 
         return view('rewards.index', compact('rewards'));
     }
@@ -51,7 +62,7 @@ class RewardController extends Controller
             'image' => 'nullable|image|max:2048',
             'points_cost' => 'required|integer|min:1',
             'stock' => 'nullable|integer|min:0',
-            'min_grade' => 'required|in:novice,pilier,ambassadeur',
+            'min_grade' => 'in:novice,pilier,ambassadeur',
             'is_premium' => 'boolean',
             'is_active' => 'boolean',
             'expires_at' => 'nullable|date|after:today',

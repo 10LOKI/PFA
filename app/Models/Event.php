@@ -66,18 +66,8 @@ class Event extends Model
     {
         return $this->belongsToMany(User::class)
             ->using(EventUser::class)
-            ->withPivot(['status', 'checked_in_at', 'checked_out_at', 'points_earned', 'partner_rating', 'partner_feedback', 'qr_token'])
+            ->withPivot(['status', 'checked_in_at', 'checked_out_at', 'points_earned', 'qr_token'])
             ->withTimestamps();
-    }
-
-    public function comments(): MorphMany
-    {
-        return $this->morphMany(Comment::class, 'commentable');
-    }
-
-    public function feedbacks(): MorphMany
-    {
-        return $this->morphMany(Feedback::class, 'feedbackable');
     }
 
     public function likes(): MorphMany

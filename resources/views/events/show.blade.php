@@ -113,24 +113,6 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    {{-- Comments section --}}
-                    @if($event->comments->count() > 0)
-                        <div class="glass-panel border-2 border-[var(--neon-cyan)] p-6">
-                            <h3 class="text-xl font-heading font-bold text-[var(--neon-cyan)] mb-6 uppercase tracking-wider">COMMENTS</h3>
-                            @foreach($event->comments as $comment)
-                                <div class="border-b border-[var(--neon-cyan)]/20 py-4 last:border-b-0">
-                                    <p class="text-[var(--chrome-text)] text-sm mb-2">{{ $comment->body }}</p>
-                                    <div class="flex items-center gap-2 text-xs font-mono text-[var(--chrome-text)]/60">
-                                        <span class="text-[var(--neon-magenta)]">{{ $comment->user->name }}</span>
-                                        <span>•</span>
-                                        <span>{{ $comment->created_at->diffForHumans() }}</span>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
                 </div>
 
                 <div class="space-y-6">

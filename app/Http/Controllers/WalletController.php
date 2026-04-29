@@ -16,14 +16,12 @@ class WalletController extends Controller
             ->with('source')
             ->orderBy('created_at', 'desc');
 
-        // Filter by type
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
 
         $transactions = $query->paginate(15)->withQueryString();
 
-        // Summary stats
         $totalEarned = $user->pointsTransactions()
             ->where('type', 'earned')
             ->sum('amount');

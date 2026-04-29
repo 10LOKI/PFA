@@ -41,21 +41,17 @@ class EventRegistrationController extends Controller
             return back()->with('error', 'You are already registered for this event.');
         }
 
-        // Generate unique QR token for this registration
         $token = Str::uuid()->toString();
 
-        // Attach with qr_token
         $event->participants()->attach($user->id, [
             'status' => 'registered',
             'qr_token' => $token,
         ]);
 
-        // Retrieve the registration pivot to get token
         $registration = $event->participants()
             ->where('user_id', $user->id)
             ->first();
 
-        // Send QR code email
         Mail::to($user->email)->send(new StudentEventQrMail($registration->pivot));
 
         return back()->with('success', 'Registration confirmed. Check your email for QR code.');

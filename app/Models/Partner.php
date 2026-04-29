@@ -15,7 +15,7 @@ class Partner extends Model
 
     protected $fillable = [
         'user_id', 'company_name', 'logo', 'bio', 'website',
-        'sector', 'rc_number', 'rc_document', 'kyc_status', 'is_certified',
+        'sector', 'kyc_status', 'is_certified',
     ];
 
     protected function casts(): array

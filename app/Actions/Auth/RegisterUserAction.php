@@ -2,25 +2,13 @@
 
 namespace App\Actions\Auth;
 
+use App\Config\Permissions;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class RegisterUserAction
 {
-    private const PERMISSIONS = [
-        'student' => [
-            'event.browse', 'event.register', 'event.checkin',
-            'reward.browse', 'reward.redeem',
-            'comment.create', 'feedback.create', 'certificate.download',
-        ],
-        'partner' => [
-            'event.browse', 'event.create', 'event.update', 'event.delete',
-            // 'event.generate-qr', // deprecated
-            'checkin.validate', 'student.rate',
-        ],
-    ];
-
     public function execute(array $data): User
     {
         return DB::transaction(function () use ($data) {
@@ -31,7 +19,7 @@ class RegisterUserAction
                 'role' => $data['role'],
             ]);
 
-            $user->givePermissionTo(self::PERMISSIONS[$data['role']]);
+            $user->givePermissionTo(Permissions::forRole($data['role']));
 
             return $user;
         });

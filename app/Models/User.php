@@ -22,15 +22,11 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'avatar',
         'city',
-        'phone',
-        'establishment_id',
         'points_balance',
         'total_hours',
         'grade',
         'kyc_verified',
-        'is_certified_partner',
         'interests',
     ];
 
@@ -45,7 +41,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'kyc_verified' => 'boolean',
-            'is_certified_partner' => 'boolean',
             'interests' => 'array',
         ];
     }
@@ -94,19 +89,9 @@ class User extends Authenticatable
     }
 
     // --- Relationships ---
-    public function establishment(): BelongsTo
-    {
-        return $this->belongsTo(Establishment::class);
-    }
-
     public function partner(): HasOne
     {
         return $this->hasOne(Partner::class);
-    }
-
-    public function grades(): HasMany
-    {
-        return $this->hasMany(Grade::class);
     }
 
     public function pointsTransactions(): HasMany
@@ -123,7 +108,7 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Event::class)
             ->using(EventUser::class)
-            ->withPivot(['status', 'checked_in_at', 'points_earned', 'partner_rating', 'partner_feedback'])
+            ->withPivot(['status', 'checked_in_at', 'points_earned'])
             ->withTimestamps();
     }
 
@@ -141,16 +126,6 @@ class User extends Authenticatable
     public function sentMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'sender_id');
-    }
-
-    public function comments(): HasMany
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function feedbacks(): HasMany
-    {
-        return $this->hasMany(Feedback::class);
     }
 
     public function likedEvents(): MorphToMany

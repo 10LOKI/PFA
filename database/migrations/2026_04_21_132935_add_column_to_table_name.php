@@ -17,12 +17,12 @@ return new class extends Migration
     }
 
     /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('likes', function (Blueprint $table) {
-            //
-        });
-    }
+      * Reverse the migrations.
+      */
+     public function down(): void
+     {
+         Schema::table('likes', function (Blueprint $table) {
+             $table->dropForeign(['event_id']);
+         });
+     }
 };

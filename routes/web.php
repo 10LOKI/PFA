@@ -97,12 +97,6 @@ Route::middleware('auth')->group(function () {
     // Wallet
     Route::get('wallet', [WalletController::class, 'index'])->name('wallet.index');
 
-    // Leaderboard
-    Route::get('leaderboard', [LeaderboardController::class, 'index'])->name('leaderboard.index');
-    Route::get('leaderboard/city/{city}', [LeaderboardController::class, 'city'])->name('leaderboard.city');
-    Route::get('leaderboard/establishment/{establishment}', [LeaderboardController::class, 'establishment'])->name('leaderboard.establishment');
-    Route::get('leaderboard/weekly', [LeaderboardController::class, 'weekly'])->name('leaderboard.weekly');
-
     // Admin
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('kyc', [KycController::class, 'index'])->name('kyc.index');
@@ -112,34 +106,3 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-// // Debug route to test notifications - access as logged in user
-// Route::middleware('auth')->get('/debug-notification', function () {
-//     $event = Event::latest()->first();
-
-//     if (! $event) {
-//         return response()->json(['error' => 'No events found']);
-//     }
-
-//     // Get other users (not current user)
-//     $users = User::where('id', '!=', auth()->id())->get();
-
-//     // Save to custom notifications table
-//     foreach ($users as $user) {
-//         Notification::create([
-//             'user_id' => $user->id,
-//             'type' => 'event_created',
-//             'title' => 'Nouvel événement',
-//             'message' => $event->title,
-//             'link' => route('events.show', $event),
-//             'event_id' => $event->id,
-//             'read' => false,
-//         ]);
-//     }
-
-//     return response()->json([
-//         'success' => true,
-//         'message' => 'Notification sent to '.$users->count().' users',
-//         'event' => $event->title,
-//     ]);
-// });

@@ -14,7 +14,7 @@ class EventUser extends Pivot
 
     protected $fillable = [
         'event_id', 'user_id', 'status', 'checked_in_at', 'checked_out_at',
-        'points_earned', 'partner_rating', 'partner_feedback', 'qr_token',
+        'points_earned', 'qr_token',
     ];
 
     protected function casts(): array

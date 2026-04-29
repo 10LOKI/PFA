@@ -21,7 +21,6 @@ class StudentCheckInController extends Controller
         $registration = EventUser::where('qr_token', $token)->firstOrFail();
         $event = $registration->event;
 
-        // Authorize: only event owner or admin can validate check-ins
         $this->authorize('checkIn', $event);
 
         if ($event->status !== 'approved') {
@@ -50,10 +49,8 @@ class StudentCheckInController extends Controller
             'checked_in_at' => now(),
         ]);
 
-        // Send check-in notification to student
         $registration->user->notify(new EventCheckInNotification($event, $registration->user));
 
-        // Return JSON for AJAX requests
         if ($request->expectsJson() || $request->wantsJson()) {
             return response()->json([
                 'success' => true,

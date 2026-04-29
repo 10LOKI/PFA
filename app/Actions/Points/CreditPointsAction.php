@@ -29,9 +29,6 @@ class CreditPointsAction
                 'description' => $description,
             ]);
 
-            // Directly update points_balance via query builder to avoid triggering
-            // the User model's "updating" event which forbids direct changes.
-            // This is safe because all points changes flow through this action.
             User::where('id', $user->id)->increment('points_balance', $amount);
 
             return $transaction;

@@ -29,8 +29,6 @@
                                     <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Company</th>
                                     <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Contact</th>
                                     <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Email</th>
-                                    <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Phone</th>
-                                    <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">City</th>
                                     <th class="px-6 py-4 text-left text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Created</th>
                                     <th class="px-6 py-4 text-center text-xs font-mono uppercase tracking-wider text-[var(--neon-cyan)]">Actions</th>
                                 </tr>
@@ -46,12 +44,6 @@
                                         </td>
                                         <td class="px-6 py-4 text-[var(--chrome-text)]/70 font-mono">
                                             {{ $partner->user->email ?? 'N/A' }}
-                                        </td>
-                                        <td class="px-6 py-4 text-[var(--chrome-text)] font-mono">
-                                            {{ $partner->phone }}
-                                        </td>
-                                        <td class="px-6 py-4 text-[var(--chrome-text)] font-mono">
-                                            {{ $partner->city }}
                                         </td>
                                         <td class="px-6 py-4 text-[var(--chrome-text)]/60 font-mono">
                                             {{ $partner->created_at->format('d/m/Y') }}

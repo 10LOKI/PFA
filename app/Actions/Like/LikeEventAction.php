@@ -11,7 +11,6 @@ class LikeEventAction
 {
     public function execute(Event $event, User $user): Like
     {
-        // Guard: prevent duplicate likes
         $existing = Like::where('user_id', $user->id)
             ->where('likeable_id', $event->id)
             ->where('likeable_type', Event::class)
