@@ -1,25 +1,102 @@
- *.log
- .DS_Store
- .env
- .env.backup
- .env.production
- .phpactor.json
- .phpunit.result.cache
- /.fleet
- /.idea
- /.nova
- /.phpunit.cache
- /.vscode
- /.zed
- /auth.json
- /node_modules
- /public/build
- /public/hot
- /public/storage
- /storage/*.key
- /storage/pail
- /vendor
- _ide_helper.php
- Homestead.json
- Homestead.yaml
- Thumbs.db
+# Laravel core & environment
+/vendor/
+/node_modules/
+/.env
+/.env.example
+/.env.testing
+/.env.production
+/.env.local
+/.env.dev
+/.env.staging
+.env.backup
+
+# Storage & logs
+/storage/*.key
+/storage/logs/*.log
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/debugbar/
+/storage/app/public/uploads/*
+/storage/app/private/*
+/storage/app/temp/*
+
+# Generated files & build artifacts
+/public/build/
+/public/hot
+/public/mix-manifest.json
+/public/storage
+/public/js/
+/public/css/
+/public/images/uploads/*
+/resources/js/
+/resources/css/
+/resources/views/vendor/
+
+# Database
+/database/migrations/*_ide_helper*.php
+/database/seeders/*_ide_helper*.php
+
+# IDE & editor configs
+/.idea/
+/.vscode/
+/.phpstorm.meta.php
+/_ide_helper.php
+/_ide_helper_models.php
+.php_cs.cache
+.php_cs.dist
+.phpunit.result.cache
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*.log
+*.tmp
+*.temp
+
+# Composer & npm
+composer.lock
+package-lock.json
+yarn.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+/phpunit.xml
+/phpunit.xml.dist
+/.phpunit.cache
+/coverage/
+/Testbench/
+/tests/Browser/
+
+# Laravel specific
+/.laravel*
+/laravel-echo-server.json
+/laravel-echo-server.lock
+
+# SSL & certificates
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Backup files
+*.backup
+*.bak
+*.old
+*.orig
+
+# Sessions & caches
+/storage/framework/cache/data/*
+/bootstrap/cache/*.php
+/bootstrap/cache/config.php
+/bootstrap/cache/services.php
+/bootstrap/cache/packages.php
